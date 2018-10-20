@@ -1,8 +1,6 @@
 package com.hardcodedlambda.app;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.IOException;
 import java.net.Socket;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,22 +10,22 @@ import java.util.TimerTask;
 
 public class Pitcher {
 
-    private List<String> logs = new ArrayList<>();
-    private PrintWriter socketWriter;
+    private final List<String> logs = new ArrayList<>();
+    private final NetworkIO networkIO;
+
+    public Pitcher() throws IOException {
+
+        Socket socket = new Socket("localhost", 9092);
+        networkIO = new NetworkIO(socket);
+    }
 
     public void pitch() throws Exception {
 
         Timer timer = new Timer();
         timer.schedule(new LogState(logs), 0, 1000);
 
-        Socket client = new Socket("localhost", 9091);
-
-        BufferedReader input = new BufferedReader(new InputStreamReader(client.getInputStream()));
-
-        socketWriter = new PrintWriter(client.getOutputStream(), true);
-
         while (true) {
-            String line = input.readLine();
+            String line = networkIO.readLine();
             System.out.println("READ: Response From Catcher: " + line);
         }
     }
@@ -43,7 +41,7 @@ public class Pitcher {
         @Override
         public void run() {
             state.add(LocalDateTime.now().toString());
-            socketWriter.println("PITCHER: " + Thread.currentThread() + " -:- " + state.get(state.size() - 1));
+            networkIO.writeLine("PITCHER: " + Thread.currentThread() + " -:- " + state.get(state.size() - 1));
             System.out.println("WROTE: " + "PITCHER: " + Thread.currentThread() + " -:- " + state.get(state.size() - 1));
         }
     }
