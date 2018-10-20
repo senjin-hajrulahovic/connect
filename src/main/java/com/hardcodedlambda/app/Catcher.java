@@ -11,7 +11,7 @@ public class Catcher {
     private final IO networkIO;
 
     public Catcher() throws IOException {
-        final Socket server = new ServerSocket(9092).accept();
+        final Socket server = acceptSocket();
         networkIO = new NetworkIO(server);
     }
 
@@ -25,5 +25,9 @@ public class Catcher {
             String line = networkIO.readLine();
             logs.add(line);
         }
+    }
+
+    private Socket acceptSocket() throws IOException {
+        return new ServerSocket(9092).accept();
     }
 }
