@@ -23,12 +23,18 @@ public class App {
         final CommandLine cmd = cliParser.parse(options, args);
 
         if (cmd.hasOption("c")) {
-            // TODO - use factory instead of constructor
-           new Catcher().listen();
+            CatcherConfig catcherConfig = new CatcherConfig();
+            catcherConfig.host = "localhost";
+            catcherConfig.port = 9092;
+
+           Catcher.instance(catcherConfig).listen();
 
         } else if (cmd.hasOption("p")) {
-            // TODO - use factory instead of constructor
-            new Pitcher().pitch();
+            PitcherConfig pitcherConfig = new PitcherConfig();
+            pitcherConfig.host = "localhost";
+            pitcherConfig.port = 9092;
+
+            Pitcher.instance(pitcherConfig).pitch();
         }
     }
 }
