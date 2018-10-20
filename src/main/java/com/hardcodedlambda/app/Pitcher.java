@@ -8,16 +8,16 @@ import java.util.Timer;
 public class Pitcher {
 
     private final List<String> logs = new ArrayList<>();
-    private IO networkIO;
+    private NetworkIO networkIO;
 
     public static Pitcher instance(PitcherConfig config) throws IOException {
 
-        NetworkIO networkIO = new NetworkIO(config.host, config.port, NetworkIO.Type.CLIENT);
-        return new Pitcher(networkIO);
+        SocketNetworkIO socketNetworkIO = new SocketNetworkIO(config.host, config.port, SocketNetworkIO.Type.CLIENT);
+        return new Pitcher(socketNetworkIO);
     }
 
-    private Pitcher(NetworkIO networkIO) {
-        this.networkIO = networkIO;
+    private Pitcher(SocketNetworkIO socketNetworkIO) {
+        this.networkIO = socketNetworkIO;
     }
 
     public void pitch() throws Exception {

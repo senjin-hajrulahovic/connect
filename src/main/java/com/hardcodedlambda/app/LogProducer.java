@@ -7,9 +7,9 @@ import java.util.TimerTask;
 public class LogProducer extends TimerTask {
 
     private final List<String> state;
-    private final IO networkIO;
+    private final NetworkIO networkIO;
 
-    public LogProducer(List<String> state, IO networkIO) {
+    public LogProducer(List<String> state, NetworkIO networkIO) {
         this.state = state;
         this.networkIO = networkIO;
     }

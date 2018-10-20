@@ -5,10 +5,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 // TODO - change name
 public class LogConsumer implements Runnable {
 
-    private final IO networkIO;
+    private final NetworkIO networkIO;
     private final ConcurrentLinkedQueue<String> logs;
 
-    public LogConsumer(IO networkIO, ConcurrentLinkedQueue<String> logs) {
+    public LogConsumer(NetworkIO networkIO, ConcurrentLinkedQueue<String> logs) {
         this.networkIO = networkIO;
         this.logs = logs;
     }
