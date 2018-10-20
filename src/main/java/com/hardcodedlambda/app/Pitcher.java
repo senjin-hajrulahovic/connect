@@ -11,7 +11,7 @@ import java.util.TimerTask;
 public class Pitcher {
 
     private final List<String> logs = new ArrayList<>();
-    private final NetworkIO networkIO;
+    private final IO networkIO;
 
     public Pitcher() throws IOException {
 

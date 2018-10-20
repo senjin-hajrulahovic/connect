@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class NetworkIO {
+public class NetworkIO implements IO {
 
     private final BufferedReader reader;
     private final PrintWriter writer;

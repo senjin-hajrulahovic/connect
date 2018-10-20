@@ -8,28 +8,18 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class Catcher {
 
     private final ConcurrentLinkedQueue<String> logs = new ConcurrentLinkedQueue<>();
-    private final NetworkIO networkIO;
+    private final IO networkIO;
 
     public Catcher() throws IOException {
         final Socket server = new ServerSocket(9092).accept();
-
         networkIO = new NetworkIO(server);
     }
 
     public void listen() throws Exception {
 
-        final Runnable runnable = () -> {
-            System.out.println(Thread.currentThread());
-            while (true) {
-                if (!logs.isEmpty()) {
-                    String log = logs.poll();
-                    networkIO.writeLine("CATCHER: " + log);
-                    System.out.println(log);
-                }
-            }
-        };
+        LogConsumer logConsumer = new LogConsumer(networkIO, logs);
 
-        new Thread(runnable).start();
+        new Thread(logConsumer).start();
 
         while (true) {
             String line = networkIO.readLine();
