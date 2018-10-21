@@ -31,7 +31,7 @@ public class App {
                     .messagesPerSecond(Integer.valueOf(cmd.getOptionValue("mps")))
                     .build();
 
-            Pitcher.instance(pitcherConfig).pitch();
+            Pitcher.instance(pitcherConfig).start();
         }
     }
 

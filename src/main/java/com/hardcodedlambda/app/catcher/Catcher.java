@@ -17,7 +17,7 @@ public class Catcher {
         return new Catcher(socketNetworkIO);
     }
 
-    public Catcher(final SocketNetworkIO socketNetworkIO) {
+    public Catcher(final NetworkIO socketNetworkIO) {
         this.networkIO = socketNetworkIO;
     }
 

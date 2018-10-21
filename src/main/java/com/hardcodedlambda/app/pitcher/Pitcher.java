@@ -4,15 +4,18 @@ import com.hardcodedlambda.app.io.NetworkIO;
 import com.hardcodedlambda.app.io.SocketNetworkIO;
 
 import java.io.IOException;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
+
+import static java.util.Collections.synchronizedList;
 
 public class Pitcher {
 
     private static final int MILLISECONDS_IN_A_SECOND = 1000;
 
-    private final List<String> logs = new ArrayList<>();
+    private final List<String> logs = synchronizedList(new ArrayList<>());
     private final int messagesPerSecond;
     private NetworkIO networkIO;
 
@@ -23,22 +26,19 @@ public class Pitcher {
         return new Pitcher(socketNetworkIO, config.getMessagesPerSecond());
     }
 
-    private Pitcher(SocketNetworkIO socketNetworkIO, int messagesPerSecond) {
+    private Pitcher(NetworkIO socketNetworkIO, int messagesPerSecond) {
 
         this.networkIO = socketNetworkIO;
         this.messagesPerSecond = messagesPerSecond;
     }
 
-    public void pitch() throws Exception {
+    public void start() {
 
         Timer timer = new Timer();
-        timer.schedule(new LogProducer(logs, networkIO), 0, MILLISECONDS_IN_A_SECOND / messagesPerSecond);
+        timer.schedule(new LogProducer(logs, networkIO, Clock.systemDefaultZone()), 0);//, 0, MILLISECONDS_IN_A_SECOND / messagesPerSecond);
 
-        timer.schedule(new Reporter(logs), 0, MILLISECONDS_IN_A_SECOND);
+        new Thread(new ResponseListener(logs, networkIO, Clock.systemDefaultZone())).start();
 
-        while (true) {
-            String line = networkIO.readLine();
-//            System.out.println("READ: Response From Catcher: " + line);
-        }
+        timer.schedule(new Reporter(logs, Clock.systemDefaultZone()), 0, MILLISECONDS_IN_A_SECOND);
     }
 }
