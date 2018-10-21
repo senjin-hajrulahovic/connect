@@ -18,19 +18,21 @@ import static org.junit.Assert.assertTrue;
 @RunWith(MockitoJUnitRunner.class)
 public class LogProducerTest {
 
+    private static final int MESSAGE_SIZE = 50;
+
     @Mock
     NetworkIO networkIO;
 
     @Test
     @SuppressWarnings("unchecked")
     public void testInstantiation() throws NoSuchFieldException, IllegalAccessException {
-        LogProducer testLogProducer = new LogProducer(new ArrayList<>(), networkIO, Clock.systemDefaultZone());
+        LogProducer testLogProducer = new LogProducer(new ArrayList<>(), networkIO, MESSAGE_SIZE, Clock.systemDefaultZone());
 
         Field stateField = LogProducer.class.getDeclaredField("state");
         stateField.setAccessible(true);
         List<String> state = (List<String>)stateField.get(testLogProducer);
 
-        Field messageIdField = LogProducer.class.getDeclaredField("messageId");
+        Field messageIdField = LogProducer.class.getDeclaredField("nextAvailablePackageId");
         messageIdField.setAccessible(true);
         AtomicInteger messageId = (AtomicInteger)messageIdField.get(testLogProducer);
 
@@ -47,19 +49,19 @@ public class LogProducerTest {
 
         Clock fixedClock = Clock.fixed(fixedNow.toInstant(OffsetDateTime.now().getOffset()), ZoneOffset.systemDefault());
 
-        LogProducer testLogProducer = new LogProducer(new ArrayList<>(), networkIO, fixedClock);
+        LogProducer testLogProducer = new LogProducer(new ArrayList<>(), networkIO, MESSAGE_SIZE, fixedClock);
         testLogProducer.run();
 
         Field stateField = LogProducer.class.getDeclaredField("state");
         stateField.setAccessible(true);
         List<String> state = (List<String>)stateField.get(testLogProducer);
 
-        Field messageIdField = LogProducer.class.getDeclaredField("messageId");
+        Field messageIdField = LogProducer.class.getDeclaredField("nextAvailablePackageId");
         messageIdField.setAccessible(true);
         AtomicInteger messageId = (AtomicInteger)messageIdField.get(testLogProducer);
 
         assertEquals(state.size(), 1);
-        assertEquals(state.get(0), 0 + "_" + fixedNow.toString());
+        assertTrue(state.stream().anyMatch(s -> s.contains(nowString)));
         assertEquals(messageId.intValue(), 1);
     }
 

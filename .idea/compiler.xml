@@ -9,5 +9,8 @@
         <module name="connect.me" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="connect.me" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
