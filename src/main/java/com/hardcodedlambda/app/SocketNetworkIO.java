@@ -13,7 +13,11 @@ public class SocketNetworkIO implements NetworkIO {
     private final BufferedReader reader;
     private final PrintWriter writer;
 
-    public SocketNetworkIO(String host, int port, Type type) throws IOException {
+    public static SocketNetworkIO instance(String host, int port, Type type) throws IOException {
+        return new SocketNetworkIO(host, port, type);
+    }
+
+    private SocketNetworkIO(String host, int port, Type type) throws IOException {
 
         Socket socket;
 

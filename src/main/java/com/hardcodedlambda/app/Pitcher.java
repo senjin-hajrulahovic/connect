@@ -12,7 +12,7 @@ public class Pitcher {
 
     public static Pitcher instance(PitcherConfig config) throws IOException {
 
-        SocketNetworkIO socketNetworkIO = new SocketNetworkIO(config.host, config.port, SocketNetworkIO.Type.CLIENT);
+        SocketNetworkIO socketNetworkIO = SocketNetworkIO.instance(config.host, config.port, SocketNetworkIO.Type.CLIENT);
         return new Pitcher(socketNetworkIO);
     }
 

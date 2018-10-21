@@ -10,7 +10,7 @@ public class Catcher {
 
     public static Catcher instance(CatcherConfig config) throws IOException {
 
-        SocketNetworkIO socketNetworkIO = new SocketNetworkIO(config.host, config.port, SocketNetworkIO.Type.SERVER);
+        SocketNetworkIO socketNetworkIO = SocketNetworkIO.instance(config.host, config.port, SocketNetworkIO.Type.SERVER);
         return new Catcher(socketNetworkIO);
     }
 
