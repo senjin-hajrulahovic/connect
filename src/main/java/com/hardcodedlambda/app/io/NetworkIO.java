@@ -1,4 +1,4 @@
-package com.hardcodedlambda.app;
+package com.hardcodedlambda.app.io;
 
 import java.io.IOException;
 

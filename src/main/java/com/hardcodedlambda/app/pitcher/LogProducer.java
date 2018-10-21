@@ -1,4 +1,6 @@
-package com.hardcodedlambda.app;
+package com.hardcodedlambda.app.pitcher;
+
+import com.hardcodedlambda.app.io.NetworkIO;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,4 +1,7 @@
-package com.hardcodedlambda.app;
+package com.hardcodedlambda.app.catcher;
+
+import com.hardcodedlambda.app.io.NetworkIO;
+import com.hardcodedlambda.app.io.SocketNetworkIO;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -10,7 +13,7 @@ public class Catcher {
 
     public static Catcher instance(CatcherConfig config) throws IOException {
 
-        SocketNetworkIO socketNetworkIO = SocketNetworkIO.instance(config.host, config.port, SocketNetworkIO.Type.SERVER);
+        SocketNetworkIO socketNetworkIO = SocketNetworkIO.instance(config.getBind(), config.getPort(), SocketNetworkIO.Type.SERVER);
         return new Catcher(socketNetworkIO);
     }
 

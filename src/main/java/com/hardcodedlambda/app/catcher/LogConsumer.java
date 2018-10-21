@@ -1,4 +1,6 @@
-package com.hardcodedlambda.app;
+package com.hardcodedlambda.app.catcher;
+
+import com.hardcodedlambda.app.io.NetworkIO;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
