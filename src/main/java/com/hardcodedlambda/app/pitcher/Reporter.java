@@ -20,6 +20,6 @@ public class Reporter extends TimerTask {
 
     @Override
     public void run() {
-        System.out.println(LocalDateTime.now(clock).format(dateTimeFormatter) + " Current message count: " + state.size());
+        System.out.println(LocalDateTime.now(clock).format(dateTimeFormatter));
     }
 }

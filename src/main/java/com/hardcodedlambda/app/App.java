@@ -29,6 +29,7 @@ public class App {
                     .port(Integer.valueOf(cmd.getOptionValue("port")))
                     // TODO validate mps
                     .messagesPerSecond(Integer.valueOf(cmd.getOptionValue("mps")))
+                    .messageSize(Integer.valueOf(cmd.getOptionValue("size")))
                     .build();
 
             Pitcher.instance(pitcherConfig).start();
@@ -43,6 +44,9 @@ public class App {
         options.addOption("p", false, "pitcher");
         options.addOption("mps", true, "messages per second");
         options.addOption("port", true, "port");
+
+        // TODO validate
+        options.addOption("size", true, "size of sent message");
 
         final CommandLineParser cliParser = new DefaultParser();
         return cliParser.parse(options, args);
