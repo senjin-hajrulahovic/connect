@@ -15,7 +15,8 @@ public class App {
         if (cmd.hasOption("c")) {
 
             CatcherConfig catcherConfig = new CatcherConfig.Builder()
-                    .bind(cmd.getOptionValue("bind"))
+//                    .bind(cmd.getOptionValue("bind"))
+                    .bind("localhost")
                     .port(Integer.valueOf(cmd.getOptionValue("port")))
                     .build();
 
@@ -34,7 +35,7 @@ public class App {
         }
     }
 
-    private static final CommandLine cmd(String[] args) throws ParseException {
+    private static CommandLine cmd(String[] args) throws ParseException {
 
         final Options options = new Options();
 

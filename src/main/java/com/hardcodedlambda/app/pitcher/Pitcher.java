@@ -34,9 +34,11 @@ public class Pitcher {
         Timer timer = new Timer();
         timer.schedule(new LogProducer(logs, networkIO), 0, MILLISECONDS_IN_A_SECOND / messagesPerSecond);
 
+        timer.schedule(new Reporter(logs), 0, MILLISECONDS_IN_A_SECOND);
+
         while (true) {
             String line = networkIO.readLine();
-            System.out.println("READ: Response From Catcher: " + line);
+//            System.out.println("READ: Response From Catcher: " + line);
         }
     }
 }

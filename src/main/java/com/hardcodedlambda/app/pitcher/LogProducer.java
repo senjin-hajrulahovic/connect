@@ -20,6 +20,6 @@ public class LogProducer extends TimerTask {
     public void run() {
         state.add(LocalDateTime.now().toString());
         networkIO.writeLine("PITCHER: " + Thread.currentThread() + " -:- " + state.get(state.size() - 1));
-        System.out.println("WROTE: " + "PITCHER: " + Thread.currentThread() + " -:- " + state.get(state.size() - 1));
+//        System.out.println("WROTE: " + "PITCHER: " + Thread.currentThread() + " -:- " + state.get(state.size() - 1));
     }
 }
