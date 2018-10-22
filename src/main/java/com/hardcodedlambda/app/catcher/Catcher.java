@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Catcher {
 
-    private final ConcurrentLinkedQueue<RequestPackage> logs = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<RequestPackage> receivedPackages = new ConcurrentLinkedQueue<>();
     private final NetworkIO networkIO;
 
     public static Catcher instance(CatcherConfig config) throws IOException {
@@ -25,13 +25,13 @@ public class Catcher {
 
     public void listen() throws Exception {
 
-        LogConsumer logConsumer = new LogConsumer(networkIO, logs, Clock.systemDefaultZone());
+        LogConsumer logConsumer = new LogConsumer(networkIO, receivedPackages, Clock.systemDefaultZone());
 
         new Thread(logConsumer).start();
 
         while (true) {
             RequestPackage requestPackage = RequestPackage.fromString(networkIO.readLine());
-            logs.add(requestPackage);
+            receivedPackages.add(requestPackage);
         }
     }
 }

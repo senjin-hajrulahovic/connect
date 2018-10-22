@@ -14,7 +14,7 @@ public class App {
 
         if (cmd.hasOption("c")) {
 
-            CatcherConfig catcherConfig = new CatcherConfig.Builder()
+            CatcherConfig catcherConfig = CatcherConfig.builder()
 //                    .bind(cmd.getOptionValue("bind"))
                     .bind("localhost")
                     .port(Integer.valueOf(cmd.getOptionValue("port")))
@@ -24,7 +24,7 @@ public class App {
 
         } else if (cmd.hasOption("p")) {
 
-            PitcherConfig pitcherConfig = new PitcherConfig.Builder()
+            PitcherConfig pitcherConfig = PitcherConfig.builder()
                     .host("localhost")
                     .port(Integer.valueOf(cmd.getOptionValue("port")))
                     // TODO validate mps

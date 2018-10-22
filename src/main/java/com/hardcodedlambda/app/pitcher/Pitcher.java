@@ -14,7 +14,6 @@ public class Pitcher {
 
     private static final int MILLISECONDS_IN_A_SECOND = 1000;
 
-
     private static final Map<Integer, Measurement> measurements = new ConcurrentHashMap<>();
 
     private final int messagesPerSecond;
