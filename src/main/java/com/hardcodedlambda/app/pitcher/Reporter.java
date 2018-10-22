@@ -12,11 +12,11 @@ public class Reporter extends TimerTask {
 
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    private final List<TestPackage> state;
+    private final List<TestPackage> sentPackages;
     private final Clock clock;
 
-    public Reporter(List<TestPackage> state, Clock clock) {
-        this.state = state;
+    public Reporter(List<TestPackage> sentPackages, Clock clock) {
+        this.sentPackages = sentPackages;
         this.clock = clock;
     }
 
@@ -24,7 +24,9 @@ public class Reporter extends TimerTask {
     public void run() {
         System.out.print(LocalDateTime.now(clock).format(dateTimeFormatter));
         System.out.print(", ");
-        System.out.print("sent packages total: " + state.size());
+        System.out.print("sent packages total: " + sentPackages.size());
         System.out.println();
+
+//        List<TestPackage> lastSecond =
     }
 }
