@@ -20,6 +20,9 @@ public class Reporter extends TimerTask {
 
     @Override
     public void run() {
-        System.out.println(LocalDateTime.now(clock).format(dateTimeFormatter));
+        System.out.print(LocalDateTime.now(clock).format(dateTimeFormatter));
+        System.out.print(", ");
+        System.out.print("sent packages total: " + state.size());
+        System.out.println();
     }
 }

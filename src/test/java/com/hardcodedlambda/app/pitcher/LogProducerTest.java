@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(MockitoJUnitRunner.class)
 public class LogProducerTest {
 
-    private static final int MESSAGE_SIZE = 50;
+    private static final int MESSAGE_SIZE = 150;
 
     @Mock
     NetworkIO networkIO;
@@ -62,6 +62,7 @@ public class LogProducerTest {
 
         assertEquals(state.size(), 1);
         assertTrue(state.stream().anyMatch(s -> s.contains(nowString)));
+        assertEquals(state.get(0).length(), MESSAGE_SIZE);
         assertEquals(messageId.intValue(), 1);
     }
 

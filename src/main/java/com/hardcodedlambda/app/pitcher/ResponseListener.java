@@ -30,17 +30,18 @@ public class ResponseListener implements Runnable {
                 LocalDateTime arrivedAtCatcher = LocalDateTime.parse(arrivedAtCatcherString);
                 LocalDateTime receivedAt = LocalDateTime.now(clock);
 
-                logs.stream().filter(l -> l.startsWith(messageId + "_")).findFirst()
-                        .ifPresent(l -> {
+//                logs.stream().filter(l -> l.startsWith(messageId + "_")).findFirst()
+//                        .ifPresent(l -> {
+//
+//                            System.out.println("            -----------             ");
+//                            System.out.println("sent at:            " + l.split("_")[1]);
+//                            System.out.println("arrived at catcher: " + arrivedAtCatcher);
+//                            System.out.println("back to pitcher at: " + receivedAt);
+//                            System.out.println("            -----------             ");
+//                        });
 
-                            System.out.println("ORIGINAL MESSAGE FOUND");
-                            System.out.println("sent at:            " + l.split("_")[1]);
-                            System.out.println("arrived at catcher: " + arrivedAtCatcher);
-                            System.out.println("back to pitcher at: " + receivedAt);
-                        });
 
-
-                System.out.println("response from catcher: " + messageId + "_" + receivedAt);
+//                System.out.println("response from catcher: " + line);
             } catch (IOException ex) {
                 System.err.println("Failed to load line");
             }

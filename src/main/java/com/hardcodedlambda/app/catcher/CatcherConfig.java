@@ -20,12 +20,12 @@ public class CatcherConfig {
     public static class Builder {
         private CatcherConfig config = new CatcherConfig();
 
-        public CatcherConfig.Builder bind(String bind) {
+        public Builder bind(String bind) {
             this.config.bind = bind;
             return this;
         }
 
-        public CatcherConfig.Builder port(int port) {
+        public Builder port(int port) {
             this.config.port = port;
             return this;
         }

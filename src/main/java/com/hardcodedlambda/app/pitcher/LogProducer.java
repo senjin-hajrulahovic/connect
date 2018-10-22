@@ -18,7 +18,6 @@ public class LogProducer extends TimerTask {
 
     private AtomicInteger nextAvailablePackageId = new AtomicInteger(0);
 
-    // TODO pass clock to make it testable
     public LogProducer(List<String> state, NetworkIO networkIO, int messageSize, Clock clock) {
         this.state = state;
         this.networkIO = networkIO;

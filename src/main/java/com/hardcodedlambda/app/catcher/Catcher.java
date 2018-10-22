@@ -4,6 +4,7 @@ import com.hardcodedlambda.app.io.NetworkIO;
 import com.hardcodedlambda.app.io.SocketNetworkIO;
 
 import java.io.IOException;
+import java.time.Clock;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Catcher {
@@ -17,13 +18,13 @@ public class Catcher {
         return new Catcher(socketNetworkIO);
     }
 
-    public Catcher(final NetworkIO socketNetworkIO) {
+    private Catcher(final NetworkIO socketNetworkIO) {
         this.networkIO = socketNetworkIO;
     }
 
     public void listen() throws Exception {
 
-        LogConsumer logConsumer = new LogConsumer(networkIO, logs);
+        LogConsumer logConsumer = new LogConsumer(networkIO, logs, Clock.systemDefaultZone());
 
         new Thread(logConsumer).start();
 

@@ -38,7 +38,7 @@ public class Pitcher {
 
         Timer timer = new Timer();
         timer.schedule(new LogProducer(logs, networkIO, messageSize, Clock.systemDefaultZone()), 0
-//                , MILLISECONDS_IN_A_SECOND / messagesPerSecond
+                , MILLISECONDS_IN_A_SECOND / messagesPerSecond
         );
 
         new Thread(new ResponseListener(logs, networkIO, Clock.systemDefaultZone())).start();
