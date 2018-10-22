@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Builder
 @Getter
@@ -12,7 +13,24 @@ import java.time.LocalDateTime;
 public class Measurement {
 
     private LocalDateTime sentFromPitcherAt;
-    private LocalDateTime arrivedAtCatcherTime;
-    private LocalDateTime arrivedBackAtPitcherAtTime;
+    private LocalDateTime arrivedAtCatcherAt;
+    private LocalDateTime arrivedBackAtPitcherAt;
+
+    // measurement arrived at cather and was received by pitcher
+    public boolean completedRoundTrip() {
+        return sentFromPitcherAt != null && arrivedAtCatcherAt != null && arrivedBackAtPitcherAt != null;
+    }
+
+    public long milisFromPitcherToCatcher() {
+        return sentFromPitcherAt.until(arrivedAtCatcherAt, ChronoUnit.MILLIS);
+    }
+
+    public long milisFromPCatcherToPitcher() {
+        return arrivedAtCatcherAt.until(arrivedBackAtPitcherAt, ChronoUnit.MILLIS);
+    }
+
+    public long milisFromPitcgerToPitcher() {
+        return milisFromPitcherToCatcher() + milisFromPCatcherToPitcher();
+    }
 
 }

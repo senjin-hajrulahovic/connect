@@ -28,15 +28,15 @@ public class ResponseListener implements Runnable {
                 RequestPackage requestPackage = RequestPackage.fromString(packageText);
 
                 Measurement measurement = Measurement.builder()
-                        .arrivedAtCatcherTime(requestPackage.getTime())
-                        .arrivedBackAtPitcherAtTime(LocalDateTime.now(clock))
+                        .arrivedAtCatcherAt(requestPackage.getTime())
+                        .arrivedBackAtPitcherAt(LocalDateTime.now(clock))
                         .build();
 
                 int packageId = requestPackage.getId();
 
                 measurements.merge(packageId, measurement, mergeMeasurements);
 
-                System.out.println(measurements.get(packageId));
+//                System.out.println(measurements.get(packageId));
 //
 // (Measurement oldM, Measurement newM) -> {
 //                    return oldM.
@@ -65,6 +65,6 @@ public class ResponseListener implements Runnable {
     private static BinaryOperator<Measurement> mergeMeasurements = (sent, received) ->
             Measurement.builder()
                 .sentFromPitcherAt(sent.getSentFromPitcherAt())
-                .arrivedAtCatcherTime(received.getArrivedAtCatcherTime())
-                .arrivedBackAtPitcherAtTime(received.getArrivedBackAtPitcherAtTime()).build();
+                .arrivedAtCatcherAt(received.getArrivedAtCatcherAt())
+                .arrivedBackAtPitcherAt(received.getArrivedBackAtPitcherAt()).build();
 }

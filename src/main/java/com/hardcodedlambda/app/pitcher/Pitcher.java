@@ -6,6 +6,11 @@ import com.hardcodedlambda.app.io.SocketNetworkIO;
 
 import java.io.IOException;
 import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.Map;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,12 +49,16 @@ public class Pitcher {
     public void start() {
 
         // TODO start at second start rather than somewhere in the middle
-        new Timer().schedule(logProducer, 0
-                , MILLISECONDS_IN_A_SECOND / messagesPerSecond
-        );
+
+        LocalDateTime firstRunz = LocalDateTime.now().plusSeconds(1).truncatedTo(ChronoUnit.SECONDS);
+        ZonedDateTime zdt = firstRunz.atZone(ZoneId.systemDefault());
+        Date firstRun = Date.from(zdt.toInstant());
+
+
+        new Timer().schedule(logProducer, firstRun,MILLISECONDS_IN_A_SECOND / messagesPerSecond);
 
         new Thread(responseListener).start();
 
-        new Timer().schedule(reporter, 0, MILLISECONDS_IN_A_SECOND);
+        new Timer().schedule(reporter, firstRun, MILLISECONDS_IN_A_SECOND);
     }
 }

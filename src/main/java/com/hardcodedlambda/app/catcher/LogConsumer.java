@@ -26,8 +26,9 @@ public class LogConsumer implements Runnable {
 
                 RequestPackage requestPackage = receivedPackage.copyWithUpdatedTime(LocalDateTime.now(clock));
 
+
                 networkIO.writeLine(requestPackage.toString());
-                System.out.println(requestPackage);
+//                System.out.println(requestPackage);
             }
         }
     }
