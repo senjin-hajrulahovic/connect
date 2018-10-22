@@ -18,7 +18,10 @@ public class Pitcher {
     private final List<String> logs = synchronizedList(new ArrayList<>());
     private final int messagesPerSecond;
     private NetworkIO networkIO;
-    private int messageSize;
+
+    private LogProducer logProducer;
+    private ResponseListener responseListener;
+    private Reporter reporter;
 
     public static Pitcher instance(PitcherConfig config) throws IOException {
 
@@ -31,18 +34,20 @@ public class Pitcher {
 
         this.networkIO = socketNetworkIO;
         this.messagesPerSecond = messagesPerSecond;
-        this.messageSize = messageSize;
+
+        this.logProducer = new LogProducer(logs, networkIO, messageSize, Clock.systemDefaultZone());
+        this.responseListener = new ResponseListener(logs, networkIO, Clock.systemDefaultZone());
+        this.reporter = new Reporter(logs, Clock.systemDefaultZone());
     }
 
     public void start() {
 
-        Timer timer = new Timer();
-        timer.schedule(new LogProducer(logs, networkIO, messageSize, Clock.systemDefaultZone()), 0
+        new Timer().schedule(logProducer, 0
                 , MILLISECONDS_IN_A_SECOND / messagesPerSecond
         );
 
-        new Thread(new ResponseListener(logs, networkIO, Clock.systemDefaultZone())).start();
+        new Thread(responseListener).start();
 
-        timer.schedule(new Reporter(logs, Clock.systemDefaultZone()), 0, MILLISECONDS_IN_A_SECOND);
+        new Timer().schedule(reporter, 0, MILLISECONDS_IN_A_SECOND);
     }
 }
