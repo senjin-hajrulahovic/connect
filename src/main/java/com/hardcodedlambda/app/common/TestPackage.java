@@ -19,6 +19,16 @@ public class TestPackage {
         this.size = size;
     }
 
+    public static TestPackage fromString(String packageText) {
+
+        String[] packageComponent = packageText.split("_");
+
+        int id = Integer.valueOf(packageComponent[0]);
+        LocalDateTime time = LocalDateTime.parse(packageComponent[1]);
+
+        return new TestPackage(id, time, packageText.length());
+    }
+
     @Override
     public String toString() {
 

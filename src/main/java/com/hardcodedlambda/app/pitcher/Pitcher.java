@@ -1,5 +1,6 @@
 package com.hardcodedlambda.app.pitcher;
 
+import com.hardcodedlambda.app.common.TestPackage;
 import com.hardcodedlambda.app.io.NetworkIO;
 import com.hardcodedlambda.app.io.SocketNetworkIO;
 
@@ -15,7 +16,7 @@ public class Pitcher {
 
     private static final int MILLISECONDS_IN_A_SECOND = 1000;
 
-    private final List<String> logs = synchronizedList(new ArrayList<>());
+    private final List<TestPackage> sentPackages = synchronizedList(new ArrayList<>());
     private final int messagesPerSecond;
     private NetworkIO networkIO;
 
@@ -35,9 +36,9 @@ public class Pitcher {
         this.networkIO = socketNetworkIO;
         this.messagesPerSecond = messagesPerSecond;
 
-        this.logProducer = new LogProducer(logs, networkIO, messageSize, Clock.systemDefaultZone());
-        this.responseListener = new ResponseListener(logs, networkIO, Clock.systemDefaultZone());
-        this.reporter = new Reporter(logs, Clock.systemDefaultZone());
+        this.logProducer = new LogProducer(sentPackages, networkIO, messageSize, Clock.systemDefaultZone());
+        this.responseListener = new ResponseListener(sentPackages, networkIO, Clock.systemDefaultZone());
+        this.reporter = new Reporter(sentPackages, Clock.systemDefaultZone());
     }
 
     public void start() {

@@ -1,5 +1,7 @@
 package com.hardcodedlambda.app.pitcher;
 
+import com.hardcodedlambda.app.common.TestPackage;
+
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,10 +12,10 @@ public class Reporter extends TimerTask {
 
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    private final List<String> state;
+    private final List<TestPackage> state;
     private final Clock clock;
 
-    public Reporter(List<String> state, Clock clock) {
+    public Reporter(List<TestPackage> state, Clock clock) {
         this.state = state;
         this.clock = clock;
     }

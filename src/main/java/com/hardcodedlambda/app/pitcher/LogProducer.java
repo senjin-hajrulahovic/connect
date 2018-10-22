@@ -11,15 +11,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class LogProducer extends TimerTask {
 
-    private final List<String> state;
+    private final List<TestPackage> sentPackages;
     private final NetworkIO networkIO;
     private final Clock clock;
     private final int messageSize;
 
     private AtomicInteger nextAvailablePackageId = new AtomicInteger(0);
 
-    public LogProducer(List<String> state, NetworkIO networkIO, int messageSize, Clock clock) {
-        this.state = state;
+    public LogProducer(List<TestPackage> sentPackages, NetworkIO networkIO, int messageSize, Clock clock) {
+        this.sentPackages = sentPackages;
         this.networkIO = networkIO;
         this.clock = clock;
         this.messageSize = messageSize;
@@ -31,7 +31,7 @@ public class LogProducer extends TimerTask {
         TestPackage pitcherPackage =
                 new TestPackage(nextAvailablePackageId.getAndIncrement(), LocalDateTime.now(clock), messageSize);
 
-        state.add(pitcherPackage.toString());
+        sentPackages.add(pitcherPackage);
         networkIO.writeLine(pitcherPackage.toString());
     }
 }

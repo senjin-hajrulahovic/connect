@@ -1,5 +1,6 @@
 package com.hardcodedlambda.app.pitcher;
 
+import com.hardcodedlambda.app.common.TestPackage;
 import com.hardcodedlambda.app.io.NetworkIO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,15 +29,15 @@ public class LogProducerTest {
     public void testInstantiation() throws NoSuchFieldException, IllegalAccessException {
         LogProducer testLogProducer = new LogProducer(new ArrayList<>(), networkIO, MESSAGE_SIZE, Clock.systemDefaultZone());
 
-        Field stateField = LogProducer.class.getDeclaredField("state");
+        Field stateField = LogProducer.class.getDeclaredField("sentPackages");
         stateField.setAccessible(true);
-        List<String> state = (List<String>)stateField.get(testLogProducer);
+        List<TestPackage> sentPackages = (List<TestPackage>)stateField.get(testLogProducer);
 
         Field messageIdField = LogProducer.class.getDeclaredField("nextAvailablePackageId");
         messageIdField.setAccessible(true);
         AtomicInteger messageId = (AtomicInteger)messageIdField.get(testLogProducer);
 
-        assertTrue(state.isEmpty());
+        assertTrue(sentPackages.isEmpty());
         assertEquals(messageId.intValue(), 0);
     }
 
@@ -52,17 +53,17 @@ public class LogProducerTest {
         LogProducer testLogProducer = new LogProducer(new ArrayList<>(), networkIO, MESSAGE_SIZE, fixedClock);
         testLogProducer.run();
 
-        Field stateField = LogProducer.class.getDeclaredField("state");
-        stateField.setAccessible(true);
-        List<String> state = (List<String>)stateField.get(testLogProducer);
+        Field sentPackagesField = LogProducer.class.getDeclaredField("sentPackages");
+        sentPackagesField.setAccessible(true);
+        List<TestPackage> sentPackages = (List<TestPackage>)sentPackagesField.get(testLogProducer);
 
         Field messageIdField = LogProducer.class.getDeclaredField("nextAvailablePackageId");
         messageIdField.setAccessible(true);
         AtomicInteger messageId = (AtomicInteger)messageIdField.get(testLogProducer);
 
-        assertEquals(state.size(), 1);
-        assertTrue(state.stream().anyMatch(s -> s.contains(nowString)));
-        assertEquals(state.get(0).length(), MESSAGE_SIZE);
+        assertEquals(sentPackages.size(), 1);
+
+        assertEquals(sentPackages.get(0).toString().length(), MESSAGE_SIZE);
         assertEquals(messageId.intValue(), 1);
     }
 
