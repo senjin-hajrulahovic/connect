@@ -23,12 +23,9 @@ public class LogConsumer implements Runnable {
             if (!receivedPackages.isEmpty()) {
 
                 RequestPackage receivedPackage = receivedPackages.poll();
-
                 RequestPackage requestPackage = receivedPackage.copyWithUpdatedTime(LocalDateTime.now(clock));
 
-
                 networkIO.writeLine(requestPackage.toString());
-//                System.out.println(requestPackage);
             }
         }
     }

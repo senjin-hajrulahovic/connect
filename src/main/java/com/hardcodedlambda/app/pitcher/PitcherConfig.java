@@ -1,11 +1,8 @@
 package com.hardcodedlambda.app.pitcher;
 
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-//@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @Builder
 public class PitcherConfig {

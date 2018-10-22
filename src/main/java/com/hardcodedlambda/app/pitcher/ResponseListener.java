@@ -36,29 +36,9 @@ public class ResponseListener implements Runnable {
 
                 measurements.merge(packageId, measurement, mergeMeasurements);
 
-//                System.out.println(measurements.get(packageId));
-//
-// (Measurement oldM, Measurement newM) -> {
-//                    return oldM.
-//                });
-
-//                logs.stream().filter(l -> l.startsWith(messageId + "_")).findFirst()
-//                        .ifPresent(l -> {
-//
-//                            System.out.println("            -----------             ");
-//                            System.out.println("sent at:            " + l.split("_")[1]);
-//                            System.out.println("arrived at catcher: " + arrivedAtCatcher);
-//                            System.out.println("back to pitcher at: " + receivedAt);
-//                            System.out.println("            -----------             ");
-//                        });
-
-
-//                System.out.println("response from catcher: " + line);
             } catch (IOException ex) {
                 System.err.println("Failed to load line");
             }
-
-
         }
     }
 

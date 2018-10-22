@@ -49,9 +49,8 @@ public class Pitcher {
     public void start() {
 
         // TODO start at second start rather than somewhere in the middle
-
-        LocalDateTime firstRunz = LocalDateTime.now().plusSeconds(1).truncatedTo(ChronoUnit.SECONDS);
-        ZonedDateTime zdt = firstRunz.atZone(ZoneId.systemDefault());
+        LocalDateTime firstRunTime = LocalDateTime.now().plusSeconds(1).truncatedTo(ChronoUnit.SECONDS);
+        ZonedDateTime zdt = firstRunTime.atZone(ZoneId.systemDefault());
         Date firstRun = Date.from(zdt.toInstant());
 
 

@@ -1,20 +1,15 @@
 package com.hardcodedlambda.app.pitcher;
 
 import com.hardcodedlambda.app.common.Measurement;
-import com.hardcodedlambda.app.common.RequestPackage;
 import lombok.AllArgsConstructor;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.TimerTask;
-import java.util.stream.Collectors;
-import java.util.stream.LongStream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -32,30 +27,35 @@ public class Reporter extends TimerTask {
         LocalDateTime pastSecond = LocalDateTime.now(clock).minusSeconds(1);
 
         List<Measurement> measurementsFromPastSecond = measurements.values().stream()
-                .filter(measurement -> isMeasurementSentInSecondRange(pastSecond, measurement)).collect(toList());
+                .filter(measurement -> isMeasurementSentInSecondRange(pastSecond, measurement.getSentFromPitcherAt()))
+                .collect(toList());
 
+
+        // TODO exclude values if -1
         long averageRoundTripTimeInPastSecond = (long) measurementsFromPastSecond.stream()
                 .filter(Measurement::completedRoundTrip)
                 .mapToLong(Measurement::milisFromPitcgerToPitcher)
                 .average().orElse(-1);
 
+        // TODO exclude values if -1
         long maxRoundTripTime = measurements.values().stream()
                 .filter(Measurement::completedRoundTrip)
                 .mapToLong(Measurement::milisFromPitcgerToPitcher).max().orElse(-1);
 
+        // TODO exclude values if -1
         long averageTimeFromPitcherToCatcherInPastSecond = (long) measurementsFromPastSecond.stream()
                 .filter(Measurement::completedRoundTrip)
                 .mapToLong(Measurement::milisFromPitcherToCatcher)
                 .average().orElse(-1);
 
+        // TODO exclude values if -1
         long averageTimeFromCatcherToPitcherInPastSecond = (long) measurementsFromPastSecond.stream()
                 .filter(Measurement::completedRoundTrip)
                 .mapToLong(Measurement::milisFromPCatcherToPitcher)
                 .average().orElse(-1);
 
-
-
-
+        // TODO Move labels
+        // move report to separate class with builder
         System.out.print(LocalDateTime.now(clock).format(dateTimeFormatter));
         System.out.print(", ");
         System.out.print("sent packages total: " + measurements.size());
@@ -70,26 +70,16 @@ public class Reporter extends TimerTask {
         System.out.print(", ");
         System.out.print("average B -> A time: " + averageTimeFromCatcherToPitcherInPastSecond + " ms");
         System.out.println();
-
-
-
-//        System.out.println("- --------------------------   SECOND START  -----------------");
-
-//        measurements.entrySet().stream().filter((e) -> isMeasurementSentInSecondRange(pastSecond, e.getValue())).forEach(System.out::println);
-
-//        System.out.println("- --------------------------   SECOND END  -----------------");
-
     }
 
-    public boolean isMeasurementSentInSecondRange(LocalDateTime now, Measurement measurement) {
 
-        LocalDateTime sentFromPitcherAt = measurement.getSentFromPitcherAt();
-
+    // TODO move to time util
+    private boolean isMeasurementSentInSecondRange(LocalDateTime now, LocalDateTime date) {
 
         LocalDateTime secondStart = now.truncatedTo(ChronoUnit.SECONDS);
         LocalDateTime secondEnd = secondStart.plusSeconds(1);
 
-        return !sentFromPitcherAt.isBefore(secondStart) && sentFromPitcherAt.isBefore(secondEnd);
+        return !date.isBefore(secondStart) && date.isBefore(secondEnd);
     }
 
 

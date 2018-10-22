@@ -16,7 +16,6 @@ public class Measurement {
     private LocalDateTime arrivedAtCatcherAt;
     private LocalDateTime arrivedBackAtPitcherAt;
 
-    // measurement arrived at cather and was received by pitcher
     public boolean completedRoundTrip() {
         return sentFromPitcherAt != null && arrivedAtCatcherAt != null && arrivedBackAtPitcherAt != null;
     }
