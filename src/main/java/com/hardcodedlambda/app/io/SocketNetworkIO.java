@@ -10,6 +10,7 @@ import java.net.Socket;
 
 public class SocketNetworkIO implements NetworkIO {
 
+    private Socket socket;
     private final BufferedReader reader;
     private final PrintWriter writer;
 
@@ -18,8 +19,6 @@ public class SocketNetworkIO implements NetworkIO {
     }
 
     private SocketNetworkIO(String host, int port, Type type) throws IOException {
-
-        Socket socket;
 
         if (type == Type.CLIENT) {
             socket = new Socket(host, port);
