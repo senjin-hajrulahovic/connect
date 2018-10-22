@@ -1,24 +1,22 @@
 package com.hardcodedlambda.app.pitcher;
 
+import com.hardcodedlambda.app.common.Measurement;
 import com.hardcodedlambda.app.common.RequestPackage;
 import com.hardcodedlambda.app.io.NetworkIO;
+import lombok.AllArgsConstructor;
 
 import java.io.IOException;
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Map;
+import java.util.function.BinaryOperator;
 
+@AllArgsConstructor
 public class ResponseListener implements Runnable {
 
+    private final Map<Integer, Measurement> measurements;
     private final NetworkIO networkIO;
-    private final List<RequestPackage> receivedPackages;
     private final Clock clock;
-
-    public ResponseListener(List<RequestPackage> receivedPackages, NetworkIO networkIO, Clock clock) {
-        this.networkIO = networkIO;
-        this.receivedPackages = receivedPackages;
-        this.clock = clock;
-    }
 
     @Override
     public void run() {
@@ -27,11 +25,22 @@ public class ResponseListener implements Runnable {
         while (true) {
             try {
                 String packageText = networkIO.readLine();
-
                 RequestPackage requestPackage = RequestPackage.fromString(packageText);
 
+                Measurement measurement = Measurement.builder()
+                        .arrivedAtCatcherTime(requestPackage.getTime())
+                        .arrivedBackAtPitcherAtTime(LocalDateTime.now(clock))
+                        .build();
 
-                LocalDateTime receivedAt = LocalDateTime.now(clock);
+                int packageId = requestPackage.getId();
+
+                measurements.merge(packageId, measurement, mergeMeasurements);
+
+                System.out.println(measurements.get(packageId));
+//
+// (Measurement oldM, Measurement newM) -> {
+//                    return oldM.
+//                });
 
 //                logs.stream().filter(l -> l.startsWith(messageId + "_")).findFirst()
 //                        .ifPresent(l -> {
@@ -52,4 +61,10 @@ public class ResponseListener implements Runnable {
 
         }
     }
+
+    private static BinaryOperator<Measurement> mergeMeasurements = (sent, received) ->
+            Measurement.builder()
+                .sentFromPitcherAt(sent.getSentFromPitcherAt())
+                .arrivedAtCatcherTime(received.getArrivedAtCatcherTime())
+                .arrivedBackAtPitcherAtTime(received.getArrivedBackAtPitcherAtTime()).build();
 }

@@ -1,24 +1,25 @@
 package com.hardcodedlambda.app.common;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
+@AllArgsConstructor
 public class RequestPackage {
 
     private static final String ID_FORMAT = "%010d";
     private static final String DELIMITER = "_";
     private static final char FILLER = 'a';
 
+    @Getter
     private int id;
+
+    @Getter
     private LocalDateTime time;
+
     private int size;
-
-
-    public RequestPackage(int id, LocalDateTime time, int size) {
-        this.id = id;
-        this.time = time;
-        this.size = size;
-    }
 
     public static RequestPackage fromString(String packageText) {
 

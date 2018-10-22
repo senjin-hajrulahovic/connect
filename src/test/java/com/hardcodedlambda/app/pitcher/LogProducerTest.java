@@ -1,6 +1,6 @@
 package com.hardcodedlambda.app.pitcher;
 
-import com.hardcodedlambda.app.common.RequestPackage;
+import com.hardcodedlambda.app.common.Measurement;
 import com.hardcodedlambda.app.io.NetworkIO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,8 +9,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.lang.reflect.Field;
 import java.time.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
@@ -27,17 +27,17 @@ public class LogProducerTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testInstantiation() throws NoSuchFieldException, IllegalAccessException {
-        LogProducer testLogProducer = new LogProducer(new ArrayList<>(), networkIO, MESSAGE_SIZE, Clock.systemDefaultZone());
+        LogProducer testLogProducer = new LogProducer(new ConcurrentHashMap<>(), networkIO, MESSAGE_SIZE, Clock.systemDefaultZone());
 
-        Field stateField = LogProducer.class.getDeclaredField("sentPackages");
-        stateField.setAccessible(true);
-        List<RequestPackage> sentPackages = (List<RequestPackage>)stateField.get(testLogProducer);
+        Field measurementsField = LogProducer.class.getDeclaredField("measurements");
+        measurementsField.setAccessible(true);
+        Map<Integer, Measurement> measurements = (Map<Integer, Measurement>)measurementsField.get(testLogProducer);
 
         Field messageIdField = LogProducer.class.getDeclaredField("nextAvailablePackageId");
         messageIdField.setAccessible(true);
         AtomicInteger messageId = (AtomicInteger)messageIdField.get(testLogProducer);
 
-        assertTrue(sentPackages.isEmpty());
+        assertTrue(measurements.isEmpty());
         assertEquals(messageId.intValue(), 0);
     }
 
@@ -50,20 +50,21 @@ public class LogProducerTest {
 
         Clock fixedClock = Clock.fixed(fixedNow.toInstant(OffsetDateTime.now().getOffset()), ZoneOffset.systemDefault());
 
-        LogProducer testLogProducer = new LogProducer(new ArrayList<>(), networkIO, MESSAGE_SIZE, fixedClock);
+        LogProducer testLogProducer = new LogProducer(new ConcurrentHashMap<>(), networkIO, MESSAGE_SIZE, fixedClock);
         testLogProducer.run();
 
-        Field sentPackagesField = LogProducer.class.getDeclaredField("sentPackages");
-        sentPackagesField.setAccessible(true);
-        List<RequestPackage> sentPackages = (List<RequestPackage>)sentPackagesField.get(testLogProducer);
+        Field measurementsField = LogProducer.class.getDeclaredField("measurements");
+        measurementsField.setAccessible(true);
+        Map<Integer, Measurement> measurements = (Map<Integer, Measurement>)measurementsField.get(testLogProducer);
 
         Field messageIdField = LogProducer.class.getDeclaredField("nextAvailablePackageId");
         messageIdField.setAccessible(true);
         AtomicInteger messageId = (AtomicInteger)messageIdField.get(testLogProducer);
 
-        assertEquals(sentPackages.size(), 1);
+        assertEquals(measurements.size(), 1);
 
-        assertEquals(sentPackages.get(0).toString().length(), MESSAGE_SIZE);
+        assertTrue(measurements.containsKey(0));
+        assertEquals(measurements.get(0).getSentFromPitcherAt(), fixedNow);
         assertEquals(messageId.intValue(), 1);
     }
 

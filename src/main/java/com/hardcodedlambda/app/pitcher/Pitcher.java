@@ -1,23 +1,22 @@
 package com.hardcodedlambda.app.pitcher;
 
-import com.hardcodedlambda.app.common.RequestPackage;
+import com.hardcodedlambda.app.common.Measurement;
 import com.hardcodedlambda.app.io.NetworkIO;
 import com.hardcodedlambda.app.io.SocketNetworkIO;
 
 import java.io.IOException;
 import java.time.Clock;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 import java.util.Timer;
-
-import static java.util.Collections.synchronizedList;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Pitcher {
 
     private static final int MILLISECONDS_IN_A_SECOND = 1000;
 
-    private static final List<RequestPackage> sentPackages = synchronizedList(new ArrayList<>());
-    private static final List<RequestPackage> receivedPackages = synchronizedList(new ArrayList<>());
+
+    private static final Map<Integer, Measurement> measurements = new ConcurrentHashMap<>();
+
     private final int messagesPerSecond;
     // TODO refactor
     private NetworkIO networkIO;
@@ -38,9 +37,9 @@ public class Pitcher {
         this.messagesPerSecond = messagesPerSecond;
 
         // TODO pass clock to constructor
-        this.logProducer = new LogProducer(sentPackages, networkIO, messageSize, Clock.systemDefaultZone());
-        this.responseListener = new ResponseListener(receivedPackages, networkIO, Clock.systemDefaultZone());
-        this.reporter = new Reporter(sentPackages, receivedPackages, Clock.systemDefaultZone());
+        this.logProducer = new LogProducer(measurements, networkIO, messageSize, Clock.systemDefaultZone());
+        this.responseListener = new ResponseListener(measurements, networkIO, Clock.systemDefaultZone());
+        this.reporter = new Reporter(measurements, Clock.systemDefaultZone());
     }
 
     public void start() {
