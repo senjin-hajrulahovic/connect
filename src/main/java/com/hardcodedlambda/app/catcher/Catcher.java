@@ -1,5 +1,6 @@
 package com.hardcodedlambda.app.catcher;
 
+import com.hardcodedlambda.app.common.RequestPackage;
 import com.hardcodedlambda.app.io.NetworkIO;
 import com.hardcodedlambda.app.io.SocketNetworkIO;
 
@@ -9,7 +10,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Catcher {
 
-    private final ConcurrentLinkedQueue<String> logs = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<RequestPackage> logs = new ConcurrentLinkedQueue<>();
     private final NetworkIO networkIO;
 
     public static Catcher instance(CatcherConfig config) throws IOException {
@@ -29,8 +30,8 @@ public class Catcher {
         new Thread(logConsumer).start();
 
         while (true) {
-            String line = networkIO.readLine();
-            logs.add(line);
+            RequestPackage requestPackage = RequestPackage.fromString(networkIO.readLine());
+            logs.add(requestPackage);
         }
     }
 }

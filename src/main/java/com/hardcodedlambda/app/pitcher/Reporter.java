@@ -1,6 +1,6 @@
 package com.hardcodedlambda.app.pitcher;
 
-import com.hardcodedlambda.app.common.TestPackage;
+import com.hardcodedlambda.app.common.RequestPackage;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -12,11 +12,15 @@ public class Reporter extends TimerTask {
 
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    private final List<TestPackage> sentPackages;
+    private final List<RequestPackage> sentPackages;
+    private final List<RequestPackage> receivedPackages;
     private final Clock clock;
 
-    public Reporter(List<TestPackage> sentPackages, Clock clock) {
+    public Reporter(List<RequestPackage> sentPackages, List<RequestPackage> receivedPackages, Clock clock) {
+
         this.sentPackages = sentPackages;
+        this.receivedPackages = receivedPackages;
+
         this.clock = clock;
     }
 
@@ -27,6 +31,6 @@ public class Reporter extends TimerTask {
         System.out.print("sent packages total: " + sentPackages.size());
         System.out.println();
 
-//        List<TestPackage> lastSecond =
+//        List<RequestPackage> lastSecond =
     }
 }

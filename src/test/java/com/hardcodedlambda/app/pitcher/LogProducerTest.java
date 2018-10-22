@@ -1,6 +1,6 @@
 package com.hardcodedlambda.app.pitcher;
 
-import com.hardcodedlambda.app.common.TestPackage;
+import com.hardcodedlambda.app.common.RequestPackage;
 import com.hardcodedlambda.app.io.NetworkIO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +31,7 @@ public class LogProducerTest {
 
         Field stateField = LogProducer.class.getDeclaredField("sentPackages");
         stateField.setAccessible(true);
-        List<TestPackage> sentPackages = (List<TestPackage>)stateField.get(testLogProducer);
+        List<RequestPackage> sentPackages = (List<RequestPackage>)stateField.get(testLogProducer);
 
         Field messageIdField = LogProducer.class.getDeclaredField("nextAvailablePackageId");
         messageIdField.setAccessible(true);
@@ -55,7 +55,7 @@ public class LogProducerTest {
 
         Field sentPackagesField = LogProducer.class.getDeclaredField("sentPackages");
         sentPackagesField.setAccessible(true);
-        List<TestPackage> sentPackages = (List<TestPackage>)sentPackagesField.get(testLogProducer);
+        List<RequestPackage> sentPackages = (List<RequestPackage>)sentPackagesField.get(testLogProducer);
 
         Field messageIdField = LogProducer.class.getDeclaredField("nextAvailablePackageId");
         messageIdField.setAccessible(true);

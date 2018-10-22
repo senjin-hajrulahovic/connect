@@ -1,6 +1,6 @@
 package com.hardcodedlambda.app.pitcher;
 
-import com.hardcodedlambda.app.common.TestPackage;
+import com.hardcodedlambda.app.common.RequestPackage;
 import com.hardcodedlambda.app.io.NetworkIO;
 
 import java.io.IOException;
@@ -11,26 +11,25 @@ import java.util.List;
 public class ResponseListener implements Runnable {
 
     private final NetworkIO networkIO;
-    private final List<TestPackage> sentPackages;
+    private final List<RequestPackage> receivedPackages;
     private final Clock clock;
 
-    public ResponseListener(List<TestPackage> sentPackages, NetworkIO networkIO, Clock clock) {
-        this.sentPackages = sentPackages;
+    public ResponseListener(List<RequestPackage> receivedPackages, NetworkIO networkIO, Clock clock) {
         this.networkIO = networkIO;
+        this.receivedPackages = receivedPackages;
         this.clock = clock;
     }
 
     @Override
     public void run() {
+
+        // TODO use public Timer(boolean isDaemon) ??
         while (true) {
             try {
                 String packageText = networkIO.readLine();
 
-//                String messageId = line.split("_")[0];
-//                String arrivedAtCatcherString = line.split("_")[1];
-//                LocalDateTime arrivedAtCatcher = LocalDateTime.parse(arrivedAtCatcherString);
+                RequestPackage requestPackage = RequestPackage.fromString(packageText);
 
-                TestPackage receivedPackage = TestPackage.fromString(packageText);
 
                 LocalDateTime receivedAt = LocalDateTime.now(clock);
 

@@ -3,37 +3,41 @@ package com.hardcodedlambda.app.common;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
-public class TestPackage {
+public class RequestPackage {
 
     private static final String ID_FORMAT = "%010d";
     private static final String DELIMITER = "_";
+    private static final char FILLER = 'a';
 
-    private Integer id;
+    private int id;
     private LocalDateTime time;
     private int size;
 
 
-    public TestPackage(int id, LocalDateTime time, int size) {
+    public RequestPackage(int id, LocalDateTime time, int size) {
         this.id = id;
         this.time = time;
         this.size = size;
     }
 
-    public static TestPackage fromString(String packageText) {
+    public static RequestPackage fromString(String packageText) {
 
-        String[] packageComponent = packageText.split("_");
+        String[] packageComponent = packageText.split(DELIMITER);
 
         int id = Integer.valueOf(packageComponent[0]);
         LocalDateTime time = LocalDateTime.parse(packageComponent[1]);
 
-        return new TestPackage(id, time, packageText.length());
+        return new RequestPackage(id, time, packageText.length());
+    }
+
+    public RequestPackage copyWithUpdatedTime(LocalDateTime time) {
+        return new RequestPackage(id, time, size);
     }
 
     @Override
     public String toString() {
 
         String dateString = time.toString();
-
         String id =  String.format(ID_FORMAT, this.id);
 
         String randomText =
@@ -45,7 +49,7 @@ public class TestPackage {
     private String randomStringOfLength(int length) {
 
         char[] charArray = new char[length];
-        Arrays.fill(charArray, 'a');
+        Arrays.fill(charArray, FILLER);
         return String.valueOf(charArray);
     }
 }
