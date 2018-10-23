@@ -22,7 +22,7 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 @PrepareForTest(NetworkIO.class)
-public class PackagePitcherTest {
+public class PackageEmitterTest {
 
     private static final int MESSAGE_SIZE = 150;
 
@@ -32,15 +32,15 @@ public class PackagePitcherTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testInstantiation() throws NoSuchFieldException, IllegalAccessException {
-        PackagePitcher testPackagePitcher = new PackagePitcher(new ConcurrentHashMap<>(), networkIO, MESSAGE_SIZE, Clock.systemDefaultZone());
+        PackageEmitter testPackageEmitter = new PackageEmitter(new ConcurrentHashMap<>(), networkIO, MESSAGE_SIZE, Clock.systemDefaultZone());
 
-        Field measurementsField = PackagePitcher.class.getDeclaredField("measurements");
+        Field measurementsField = PackageEmitter.class.getDeclaredField("measurements");
         measurementsField.setAccessible(true);
-        Map<Integer, Measurement> measurements = (Map<Integer, Measurement>)measurementsField.get(testPackagePitcher);
+        Map<Integer, Measurement> measurements = (Map<Integer, Measurement>)measurementsField.get(testPackageEmitter);
 
-        Field messageIdField = PackagePitcher.class.getDeclaredField("nextAvailablePackageId");
+        Field messageIdField = PackageEmitter.class.getDeclaredField("nextAvailablePackageId");
         messageIdField.setAccessible(true);
-        AtomicInteger messageId = (AtomicInteger)messageIdField.get(testPackagePitcher);
+        AtomicInteger messageId = (AtomicInteger)messageIdField.get(testPackageEmitter);
 
         assertTrue(measurements.isEmpty());
         assertEquals(messageId.intValue(), 0);
@@ -55,22 +55,22 @@ public class PackagePitcherTest {
 
         Clock fixedClock = Clock.fixed(fixedNow.toInstant(OffsetDateTime.now().getOffset()), ZoneOffset.systemDefault());
 
-        PackagePitcher testPackagePitcher = new PackagePitcher(new ConcurrentHashMap<>(), networkIO, MESSAGE_SIZE, fixedClock);
-        testPackagePitcher.run();
+        PackageEmitter testPackageEmitter = new PackageEmitter(new ConcurrentHashMap<>(), networkIO, MESSAGE_SIZE, fixedClock);
+        testPackageEmitter.run();
 
-        Field measurementsField = PackagePitcher.class.getDeclaredField("measurements");
+        Field measurementsField = PackageEmitter.class.getDeclaredField("measurements");
         measurementsField.setAccessible(true);
-        Map<Integer, Measurement> measurements = (Map<Integer, Measurement>)measurementsField.get(testPackagePitcher);
+        Map<Integer, Measurement> measurements = (Map<Integer, Measurement>)measurementsField.get(testPackageEmitter);
 
-        Field messageIdField = PackagePitcher.class.getDeclaredField("nextAvailablePackageId");
-        messageIdField.setAccessible(true);
-        AtomicInteger messageId = (AtomicInteger)messageIdField.get(testPackagePitcher);
+        Field nextAvailablePackageIdField = PackageEmitter.class.getDeclaredField("nextAvailablePackageId");
+        nextAvailablePackageIdField.setAccessible(true);
+        AtomicInteger nextAvailablePackageId = (AtomicInteger)nextAvailablePackageIdField.get(testPackageEmitter);
 
         assertEquals(measurements.size(), 1);
 
         assertTrue(measurements.containsKey(0));
         assertEquals(measurements.get(0).getSentFromPitcherAt(), fixedNow);
-        assertEquals(messageId.intValue(), 1);
+        assertEquals(nextAvailablePackageId.intValue(), 1);
 
         verify(networkIO, times(1)).writeLine(anyString());
     }

@@ -1,6 +1,7 @@
 package com.hardcodedlambda.app.common;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -8,6 +9,7 @@ import java.util.Arrays;
 
 @AllArgsConstructor
 @Getter
+@Builder
 public class RequestPackage {
 
     private static final String ID_FORMAT = "%010d";

@@ -10,31 +10,43 @@ import java.net.Socket;
 
 public class SocketNetworkIO implements NetworkIO {
 
-    private Socket socket;
-    private final BufferedReader reader;
-    private final PrintWriter writer;
+    private Socket socket = null;
+    private BufferedReader reader = null;
+    private PrintWriter writer = null;
 
-    public static SocketNetworkIO instance(String host, int port, Type type) throws IOException {
+    public static SocketNetworkIO instance(String host, int port, Type type) {
         return new SocketNetworkIO(host, port, type);
     }
 
-    private SocketNetworkIO(String host, int port, Type type) throws IOException {
+    private SocketNetworkIO(String host, int port, Type type) {
 
-        if (type == Type.CLIENT) {
-            socket = new Socket(host, port);
-        } else {
-            ServerSocket serverSocket = new ServerSocket();
-            serverSocket.bind(new InetSocketAddress(host, port));
+        try {
+            if (type == Type.CLIENT) {
+                socket = new Socket(host, port);
+            } else {
+                ServerSocket serverSocket = new ServerSocket();
+                serverSocket.bind(new InetSocketAddress(host, port));
 
-            socket = serverSocket.accept();
+                socket = serverSocket.accept();
+            }
+
+            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            writer = new PrintWriter(socket.getOutputStream(), true);
+
+        } catch (IOException ex) {
+            System.err.println("Application failed to start with cause: ");
+            System.err.println(ex.getLocalizedMessage());
+            System.exit(1);
         }
-
-        reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        writer = new PrintWriter(socket.getOutputStream(), true);
     }
 
-    public String readLine() throws IOException {
-        return reader.readLine();
+    public String readLine() {
+        try {
+            return reader.readLine();
+        } catch (IOException ex) {
+            System.err.println(ex.getLocalizedMessage());
+            return null;
+        }
     }
 
     public void writeLine(String line) {

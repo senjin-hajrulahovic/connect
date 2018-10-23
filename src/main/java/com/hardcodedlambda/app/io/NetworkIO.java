@@ -1,9 +1,7 @@
 package com.hardcodedlambda.app.io;
 
-import java.io.IOException;
-
 public interface NetworkIO {
 
-    String readLine() throws IOException;
+    String readLine();
     void writeLine(String line);
 }

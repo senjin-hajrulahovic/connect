@@ -25,8 +25,8 @@ public class Pitcher {
     // TODO refactor
     private NetworkIO networkIO;
 
-    private PackagePitcher packagePitcher;
-    private ResponseListener responseListener;
+    private PackageEmitter packageEmitter;
+    private PitcherResponseListener pitcherResponseListener;
     private Reporter reporter;
 
     public static Pitcher instance(PitcherConfig config) throws IOException {
@@ -41,8 +41,8 @@ public class Pitcher {
         this.messagesPerSecond = messagesPerSecond;
 
         // TODO pass clock to constructor
-        this.packagePitcher = new PackagePitcher(measurements, networkIO, messageSize, Clock.systemDefaultZone());
-        this.responseListener = new ResponseListener(measurements, networkIO, Clock.systemDefaultZone());
+        this.packageEmitter = new PackageEmitter(measurements, networkIO, messageSize, Clock.systemDefaultZone());
+        this.pitcherResponseListener = new PitcherResponseListener(measurements, networkIO, Clock.systemDefaultZone());
         this.reporter = new Reporter(measurements, Clock.systemDefaultZone());
     }
 
@@ -54,9 +54,9 @@ public class Pitcher {
         Date firstRun = Date.from(zdt.toInstant());
 
 
-        new Timer().schedule(packagePitcher, firstRun,MILLISECONDS_IN_A_SECOND / messagesPerSecond);
+        new Timer().schedule(packageEmitter, firstRun,MILLISECONDS_IN_A_SECOND / messagesPerSecond);
 
-        new Thread(responseListener).start();
+        new Thread(pitcherResponseListener).start();
 
         new Timer().schedule(reporter, firstRun, MILLISECONDS_IN_A_SECOND);
     }

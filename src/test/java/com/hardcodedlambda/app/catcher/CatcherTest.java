@@ -1,4 +1,4 @@
-package com.hardcodedlambda.app;
+package com.hardcodedlambda.app.catcher;
 
 import com.hardcodedlambda.app.io.SocketNetworkIO;
 import org.junit.Test;
@@ -18,7 +18,7 @@ public class CatcherTest {
     SocketNetworkIO socketNetworkIO;
 
     @Test
-    public void test() throws Exception {
+    public void test() {
 
         mockStatic(SocketNetworkIO.class);
         when(SocketNetworkIO.instance(null, 0, SocketNetworkIO.Type.SERVER)).thenReturn(socketNetworkIO);

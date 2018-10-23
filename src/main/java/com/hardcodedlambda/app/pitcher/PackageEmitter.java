@@ -12,7 +12,7 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @AllArgsConstructor
-public class PackagePitcher extends TimerTask {
+public class PackageEmitter extends TimerTask {
 
     private static AtomicInteger nextAvailablePackageId = new AtomicInteger(0);
 
@@ -28,7 +28,8 @@ public class PackagePitcher extends TimerTask {
         LocalDateTime packageSentAt = LocalDateTime.now(clock);
 
         RequestPackage pitcherPackage = new RequestPackage(packageId, packageSentAt, messageSize);
-        Measurement measurement = Measurement.builder().sentFromPitcherAt(packageSentAt).build();
+        Measurement measurement = Measurement.builder()
+                .sentFromPitcherAt(packageSentAt).build();
 
         measurements.put(packageId, measurement);
         networkIO.writeLine(pitcherPackage.toString());
