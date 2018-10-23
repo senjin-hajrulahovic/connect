@@ -4,9 +4,14 @@ import org.junit.Test;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 
+import static com.hardcodedlambda.app.utils.TimeUtils.dateToLocalDateTime;
 import static com.hardcodedlambda.app.utils.TimeUtils.isDateInPastSecond;
+import static com.hardcodedlambda.app.utils.TimeUtils.truncateToNextSecond;
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class TimeUtilsTest {
@@ -32,6 +37,16 @@ public class TimeUtilsTest {
 
         LocalDateTime dateOutsideOfSecondRange = FIXED_NOW.minusSeconds(1);
         assertTrue(isDateInPastSecond(FIXED_CLOCK, dateOutsideOfSecondRange));
+    }
+
+    @Test
+    public void testTruncateCurrantDateToNextSecond() {
+
+        Date truncatedDate = truncateToNextSecond(FIXED_CLOCK);
+        LocalDateTime truncateLocalDateTime = dateToLocalDateTime(truncatedDate);
+        LocalDateTime expectedTruncatedLocalDateTime = FIXED_NOW.plusSeconds(1).truncatedTo(ChronoUnit.SECONDS);
+
+        assertEquals(truncateLocalDateTime.getSecond(), expectedTruncatedLocalDateTime.getSecond());
     }
 
 }

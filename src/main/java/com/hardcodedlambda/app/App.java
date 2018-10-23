@@ -6,6 +6,8 @@ import com.hardcodedlambda.app.pitcher.Pitcher;
 import com.hardcodedlambda.app.pitcher.PitcherConfig;
 import org.apache.commons.cli.*;
 
+import java.time.Clock;
+
 public class App {
 
     public static void main(String[] args) throws Exception {
@@ -32,7 +34,7 @@ public class App {
                     .messageSize(Integer.valueOf(cmd.getOptionValue("size")))
                     .build();
 
-            Pitcher.instance(pitcherConfig).start();
+            Pitcher.instance(pitcherConfig, Clock.systemDefaultZone()).start();
         }
     }
 

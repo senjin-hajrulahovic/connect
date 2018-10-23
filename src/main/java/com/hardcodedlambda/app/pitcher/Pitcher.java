@@ -5,58 +5,51 @@ import com.hardcodedlambda.app.io.NetworkIO;
 import com.hardcodedlambda.app.io.SocketNetworkIO;
 
 import java.time.Clock;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Map;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.hardcodedlambda.app.utils.TimeUtils.truncateToNextSecond;
+
 public class Pitcher {
 
     private static final int MILLISECONDS_IN_A_SECOND = 1000;
-
     private static final Map<Integer, Measurement> measurements = new ConcurrentHashMap<>();
 
-    private final int messagesPerSecond;
-    // TODO refactor
     private NetworkIO networkIO;
+    private Clock clock;
+
+    private final int messagesPerSecond;
 
     private PackageEmitter packageEmitter;
     private PitcherResponseListener pitcherResponseListener;
     private Reporter reporter;
 
-    public static Pitcher instance(PitcherConfig config) {
+
+    public static Pitcher instance(PitcherConfig config, Clock clock) {
 
         SocketNetworkIO socketNetworkIO = SocketNetworkIO.instance(config.getHost(), config.getPort(), SocketNetworkIO.Type.CLIENT);
-        return new Pitcher(socketNetworkIO, config.getMessagesPerSecond(), config.getMessageSize());
+        return new Pitcher(socketNetworkIO, clock, config.getMessagesPerSecond(), config.getMessageSize());
     }
 
-    private Pitcher(NetworkIO socketNetworkIO, int messagesPerSecond, int messageSize) {
+    private Pitcher(NetworkIO socketNetworkIO, Clock clock, int messagesPerSecond, int messageSize) {
 
         this.networkIO = socketNetworkIO;
         this.messagesPerSecond = messagesPerSecond;
 
-        // TODO pass clock to constructor
-        this.packageEmitter = new PackageEmitter(measurements, networkIO, messageSize, Clock.systemDefaultZone());
-        this.pitcherResponseListener = new PitcherResponseListener(measurements, networkIO, Clock.systemDefaultZone());
-        this.reporter = new Reporter(measurements, Clock.systemDefaultZone());
+        this.packageEmitter = new PackageEmitter(measurements, networkIO, messageSize, clock);
+        this.pitcherResponseListener = new PitcherResponseListener(measurements, networkIO, clock);
+        this.reporter = new Reporter(measurements, clock);
+        this.clock = clock;
     }
 
     public void start() {
 
-        // TODO start at second start rather than somewhere in the middle
-        LocalDateTime firstRunTime = LocalDateTime.now().plusSeconds(1).truncatedTo(ChronoUnit.SECONDS);
-        ZonedDateTime zdt = firstRunTime.atZone(ZoneId.systemDefault());
-        Date firstRun = Date.from(zdt.toInstant());
-
+        Date firstRun = truncateToNextSecond(clock);
 
         new Timer().schedule(packageEmitter, firstRun,MILLISECONDS_IN_A_SECOND / messagesPerSecond);
-
         new Thread(pitcherResponseListener).start();
-
         new Timer().schedule(reporter, firstRun, MILLISECONDS_IN_A_SECOND);
     }
 }
