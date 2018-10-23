@@ -4,7 +4,6 @@ import com.hardcodedlambda.app.common.Measurement;
 import com.hardcodedlambda.app.io.NetworkIO;
 import com.hardcodedlambda.app.io.SocketNetworkIO;
 
-import java.io.IOException;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -29,7 +28,7 @@ public class Pitcher {
     private PitcherResponseListener pitcherResponseListener;
     private Reporter reporter;
 
-    public static Pitcher instance(PitcherConfig config) throws IOException {
+    public static Pitcher instance(PitcherConfig config) {
 
         SocketNetworkIO socketNetworkIO = SocketNetworkIO.instance(config.getHost(), config.getPort(), SocketNetworkIO.Type.CLIENT);
         return new Pitcher(socketNetworkIO, config.getMessagesPerSecond(), config.getMessageSize());

@@ -4,7 +4,6 @@ import com.hardcodedlambda.app.common.RequestPackage;
 import com.hardcodedlambda.app.io.NetworkIO;
 import com.hardcodedlambda.app.io.SocketNetworkIO;
 
-import java.io.IOException;
 import java.time.Clock;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -13,7 +12,7 @@ public class Catcher {
     private static final ConcurrentLinkedQueue<RequestPackage> receivedPackages = new ConcurrentLinkedQueue<>();
     private final NetworkIO networkIO;
 
-    public static Catcher instance(CatcherConfig config) throws IOException {
+    public static Catcher instance(CatcherConfig config) {
 
         SocketNetworkIO socketNetworkIO = SocketNetworkIO.instance(config.getBind(), config.getPort(), SocketNetworkIO.Type.SERVER);
         return new Catcher(socketNetworkIO);
@@ -23,11 +22,11 @@ public class Catcher {
         this.networkIO = socketNetworkIO;
     }
 
-    public void listen() throws Exception {
+    public void listen() {
 
-        LogConsumer logConsumer = new LogConsumer(networkIO, receivedPackages, Clock.systemDefaultZone());
+        PackageResponder packageResponder = new PackageResponder(networkIO, receivedPackages, Clock.systemDefaultZone());
 
-        new Thread(logConsumer).start();
+        new Thread(packageResponder).start();
 
         for (String line = networkIO.readLine(); line != null; line = networkIO.readLine()) {
             RequestPackage requestPackage = RequestPackage.fromString(line);

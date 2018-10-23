@@ -8,9 +8,10 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-// TODO - change name
 @AllArgsConstructor
-public class LogConsumer implements Runnable {
+public class PackageResponder implements Runnable {
+
+    private static boolean keepRunning = true;
 
     private final NetworkIO networkIO;
     private final ConcurrentLinkedQueue<RequestPackage> receivedPackages;
@@ -19,7 +20,7 @@ public class LogConsumer implements Runnable {
     @Override
     public void run() {
 
-        while (true) {
+        while (keepRunning) {
             if (!receivedPackages.isEmpty()) {
 
                 RequestPackage receivedPackage = receivedPackages.poll();
@@ -28,5 +29,9 @@ public class LogConsumer implements Runnable {
                 networkIO.writeLine(requestPackage.toString());
             }
         }
+    }
+
+    public void stop() {
+        this.keepRunning = false;
     }
 }
