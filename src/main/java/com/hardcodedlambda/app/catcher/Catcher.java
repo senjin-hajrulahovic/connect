@@ -28,7 +28,8 @@ public class Catcher {
 
         new Thread(packageResponder).start();
 
-        for (String line = networkIO.readLine(); line != null; line = networkIO.readLine()) {
+        String line;
+        while ((line = networkIO.readLine()) != null) {
             RequestPackage requestPackage = RequestPackage.fromString(line);
             receivedPackages.add(requestPackage);
         }
