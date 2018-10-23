@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import java.lang.reflect.Field;
 import java.time.*;
@@ -15,9 +16,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class LogProducerTest {
+@PrepareForTest(NetworkIO.class)
+public class PackagePitcherTest {
 
     private static final int MESSAGE_SIZE = 150;
 
@@ -27,15 +32,15 @@ public class LogProducerTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testInstantiation() throws NoSuchFieldException, IllegalAccessException {
-        LogProducer testLogProducer = new LogProducer(new ConcurrentHashMap<>(), networkIO, MESSAGE_SIZE, Clock.systemDefaultZone());
+        PackagePitcher testPackagePitcher = new PackagePitcher(new ConcurrentHashMap<>(), networkIO, MESSAGE_SIZE, Clock.systemDefaultZone());
 
-        Field measurementsField = LogProducer.class.getDeclaredField("measurements");
+        Field measurementsField = PackagePitcher.class.getDeclaredField("measurements");
         measurementsField.setAccessible(true);
-        Map<Integer, Measurement> measurements = (Map<Integer, Measurement>)measurementsField.get(testLogProducer);
+        Map<Integer, Measurement> measurements = (Map<Integer, Measurement>)measurementsField.get(testPackagePitcher);
 
-        Field messageIdField = LogProducer.class.getDeclaredField("nextAvailablePackageId");
+        Field messageIdField = PackagePitcher.class.getDeclaredField("nextAvailablePackageId");
         messageIdField.setAccessible(true);
-        AtomicInteger messageId = (AtomicInteger)messageIdField.get(testLogProducer);
+        AtomicInteger messageId = (AtomicInteger)messageIdField.get(testPackagePitcher);
 
         assertTrue(measurements.isEmpty());
         assertEquals(messageId.intValue(), 0);
@@ -50,22 +55,24 @@ public class LogProducerTest {
 
         Clock fixedClock = Clock.fixed(fixedNow.toInstant(OffsetDateTime.now().getOffset()), ZoneOffset.systemDefault());
 
-        LogProducer testLogProducer = new LogProducer(new ConcurrentHashMap<>(), networkIO, MESSAGE_SIZE, fixedClock);
-        testLogProducer.run();
+        PackagePitcher testPackagePitcher = new PackagePitcher(new ConcurrentHashMap<>(), networkIO, MESSAGE_SIZE, fixedClock);
+        testPackagePitcher.run();
 
-        Field measurementsField = LogProducer.class.getDeclaredField("measurements");
+        Field measurementsField = PackagePitcher.class.getDeclaredField("measurements");
         measurementsField.setAccessible(true);
-        Map<Integer, Measurement> measurements = (Map<Integer, Measurement>)measurementsField.get(testLogProducer);
+        Map<Integer, Measurement> measurements = (Map<Integer, Measurement>)measurementsField.get(testPackagePitcher);
 
-        Field messageIdField = LogProducer.class.getDeclaredField("nextAvailablePackageId");
+        Field messageIdField = PackagePitcher.class.getDeclaredField("nextAvailablePackageId");
         messageIdField.setAccessible(true);
-        AtomicInteger messageId = (AtomicInteger)messageIdField.get(testLogProducer);
+        AtomicInteger messageId = (AtomicInteger)messageIdField.get(testPackagePitcher);
 
         assertEquals(measurements.size(), 1);
 
         assertTrue(measurements.containsKey(0));
         assertEquals(measurements.get(0).getSentFromPitcherAt(), fixedNow);
         assertEquals(messageId.intValue(), 1);
+
+        verify(networkIO, times(1)).writeLine(anyString());
     }
 
 }

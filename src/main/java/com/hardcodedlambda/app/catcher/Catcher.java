@@ -29,8 +29,8 @@ public class Catcher {
 
         new Thread(logConsumer).start();
 
-        while (true) {
-            RequestPackage requestPackage = RequestPackage.fromString(networkIO.readLine());
+        for (String line = networkIO.readLine(); line != null; line = networkIO.readLine()) {
+            RequestPackage requestPackage = RequestPackage.fromString(line);
             receivedPackages.add(requestPackage);
         }
     }

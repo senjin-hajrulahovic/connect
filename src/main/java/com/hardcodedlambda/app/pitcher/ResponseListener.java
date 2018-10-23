@@ -21,9 +21,12 @@ public class ResponseListener implements Runnable {
     @Override
     public void run() {
 
-        // TODO use public Timer(boolean isDaemon) ??
-        while (true) {
-            try {
+        try {
+
+            while (true) {
+//            String packageText;
+//            while ((packageText = networkIO.readLine()) != null) {
+
                 String packageText = networkIO.readLine();
                 RequestPackage requestPackage = RequestPackage.fromString(packageText);
 
@@ -35,10 +38,10 @@ public class ResponseListener implements Runnable {
                 int packageId = requestPackage.getId();
 
                 measurements.merge(packageId, measurement, mergeMeasurements);
-
-            } catch (IOException ex) {
-                System.err.println("Failed to load line");
             }
+
+        } catch (IOException ex) {
+            System.err.println("Failed to load line");
         }
     }
 

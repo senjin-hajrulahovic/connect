@@ -25,7 +25,7 @@ public class Pitcher {
     // TODO refactor
     private NetworkIO networkIO;
 
-    private LogProducer logProducer;
+    private PackagePitcher packagePitcher;
     private ResponseListener responseListener;
     private Reporter reporter;
 
@@ -41,7 +41,7 @@ public class Pitcher {
         this.messagesPerSecond = messagesPerSecond;
 
         // TODO pass clock to constructor
-        this.logProducer = new LogProducer(measurements, networkIO, messageSize, Clock.systemDefaultZone());
+        this.packagePitcher = new PackagePitcher(measurements, networkIO, messageSize, Clock.systemDefaultZone());
         this.responseListener = new ResponseListener(measurements, networkIO, Clock.systemDefaultZone());
         this.reporter = new Reporter(measurements, Clock.systemDefaultZone());
     }
@@ -54,7 +54,7 @@ public class Pitcher {
         Date firstRun = Date.from(zdt.toInstant());
 
 
-        new Timer().schedule(logProducer, firstRun,MILLISECONDS_IN_A_SECOND / messagesPerSecond);
+        new Timer().schedule(packagePitcher, firstRun,MILLISECONDS_IN_A_SECOND / messagesPerSecond);
 
         new Thread(responseListener).start();
 

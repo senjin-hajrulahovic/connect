@@ -12,7 +12,7 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @AllArgsConstructor
-public class LogProducer extends TimerTask {
+public class PackagePitcher extends TimerTask {
 
     private static AtomicInteger nextAvailablePackageId = new AtomicInteger(0);
 
