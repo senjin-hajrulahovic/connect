@@ -20,16 +20,16 @@ public class Measurement {
         return sentFromPitcherAt != null && arrivedAtCatcherAt != null && arrivedBackAtPitcherAt != null;
     }
 
-    public long milisecondsFromPitcherToCatcher() {
+    public long millisecondsFromPitcherToCatcher() {
         return sentFromPitcherAt.until(arrivedAtCatcherAt, ChronoUnit.MILLIS);
     }
 
-    public long milisecondsFromPCatcherToPitcher() {
+    public long millisecondsFromCatcherToPitcher() {
         return arrivedAtCatcherAt.until(arrivedBackAtPitcherAt, ChronoUnit.MILLIS);
     }
 
-    public long milisecondsFromPitcherToPitcher() {
-        return milisecondsFromPitcherToCatcher() + milisecondsFromPCatcherToPitcher();
+    public long millisecondsFromPitcherToPitcher() {
+        return millisecondsFromPitcherToCatcher() + millisecondsFromCatcherToPitcher();
     }
 
 }

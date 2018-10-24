@@ -4,9 +4,7 @@ import com.hardcodedlambda.app.common.Measurement;
 import lombok.AllArgsConstructor;
 
 import java.time.Clock;
-import java.util.List;
-import java.util.Map;
-import java.util.TimerTask;
+import java.util.*;
 
 import static com.hardcodedlambda.app.utils.TimeUtils.isDateInPastSecond;
 import static java.util.stream.Collectors.toList;
@@ -20,46 +18,44 @@ public class Reporter extends TimerTask {
     @Override
     public void run() {
 
-        List<Measurement> measurementsFromPastSecond = measurements.values().stream()
+        Report report = generateReport(measurements.values(), clock);
+        System.out.println(report);
+    }
+
+    private static Report generateReport(Collection<Measurement> measurementList, Clock clock) {
+
+        List<Measurement> completedMeasurementsFromPastSecond = measurementList.stream()
                 .filter(measurement -> isDateInPastSecond(clock, measurement.getSentFromPitcherAt()))
+                .filter(Measurement::completedRoundTrip)
                 .collect(toList());
 
-
-        // TODO exclude values if -1
-        long maxRoundTripTime = measurements.values().stream()
+        long maxRoundTripTime = measurementList.stream()
                 .filter(Measurement::completedRoundTrip)
-                .mapToLong(Measurement::milisecondsFromPitcherToPitcher).max().orElse(-1);
+                .mapToLong(Measurement::millisecondsFromPitcherToPitcher)
+                .max().orElse(-1);
 
 
-        // TODO exclude values if -1
-        long averageRoundTripTimeInPastSecond = (long) measurementsFromPastSecond.stream()
-                .filter(Measurement::completedRoundTrip)
-                .mapToLong(Measurement::milisecondsFromPitcherToPitcher)
+        long averageRoundTripTimeInPastSecond = (long) completedMeasurementsFromPastSecond.stream()
+                .mapToLong(Measurement::millisecondsFromPitcherToPitcher)
                 .average().orElse(-1);
 
-        // TODO exclude values if -1
-        long averageTimeFromPitcherToCatcherInPastSecond = (long) measurementsFromPastSecond.stream()
-                .filter(Measurement::completedRoundTrip)
-                .mapToLong(Measurement::milisecondsFromPitcherToCatcher)
+        long averageTimeFromPitcherToCatcherInPastSecond = (long) completedMeasurementsFromPastSecond.stream()
+                .mapToLong(Measurement::millisecondsFromPitcherToCatcher)
                 .average().orElse(-1);
 
-        // TODO exclude values if -1
-        long averageTimeFromCatcherToPitcherInPastSecond = (long) measurementsFromPastSecond.stream()
-                .filter(Measurement::completedRoundTrip)
-                .mapToLong(Measurement::milisecondsFromPCatcherToPitcher)
+        long averageTimeFromCatcherToPitcherInPastSecond = (long) completedMeasurementsFromPastSecond.stream()
+                .mapToLong(Measurement::millisecondsFromCatcherToPitcher)
                 .average().orElse(-1);
 
-        Report report = Report.builder()
+        return Report.builder()
                 .clock(clock)
-                .sentTotal(measurements.size())
+                .sentTotal(measurementList.size())
                 .maximumRoundTripTotal(maxRoundTripTime)
 
-                .sentPastSecond(measurementsFromPastSecond.size())
+                .sentPastSecond(completedMeasurementsFromPastSecond.size())
                 .averageRoundTripPastSecond(averageRoundTripTimeInPastSecond)
                 .averageToCatcherPastSecond(averageTimeFromPitcherToCatcherInPastSecond)
                 .averageBackToPitcherPastSecond(averageTimeFromCatcherToPitcherInPastSecond)
                 .build();
-
-        System.out.println(report);
     }
 }

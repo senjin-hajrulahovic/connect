@@ -1,16 +1,19 @@
 package com.hardcodedlambda.app.pitcher;
 
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Builder
+@Getter
 public class Report {
 
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     private static final String DELIMITER = " | ";
+    private static final String TIME_UNIT = " ms";
 
     private Clock clock;
     private long sentTotal;
@@ -24,22 +27,42 @@ public class Report {
 
     public String toString() {
 
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder reportBuilder = new StringBuilder();
 
-        stringBuilder.append(LocalDateTime.now(clock).format(dateTimeFormatter));
-        stringBuilder.append(DELIMITER);
-        stringBuilder.append("sent packages total: " + sentTotal);
-        stringBuilder.append(DELIMITER);
-        stringBuilder.append("sent packages past second: " + sentPastSecond);
-        stringBuilder.append(DELIMITER);
-        stringBuilder.append("average A -> B -> A time past second: " + averageRoundTripPastSecond + " ms");
-        stringBuilder.append(DELIMITER);
-        stringBuilder.append("max A -> B -> A time: " + maximumRoundTripTotal + " ms");
-        stringBuilder.append(DELIMITER);
-        stringBuilder.append("average A -> B time: " + averageToCatcherPastSecond + " ms");
-        stringBuilder.append(DELIMITER);
-        stringBuilder.append("average B -> A time: " + averageBackToPitcherPastSecond + " ms");
+        reportBuilder.append(LocalDateTime.now(clock).format(dateTimeFormatter));
+        reportBuilder.append(DELIMITER);
 
-        return stringBuilder.toString();
+        reportBuilder.append("sent packages total: ");
+        reportBuilder.append(validate(sentTotal));
+        reportBuilder.append(DELIMITER);
+
+        reportBuilder.append("sent packages past second: ");
+        reportBuilder.append(validate(sentPastSecond));
+        reportBuilder.append(DELIMITER);
+
+        reportBuilder.append("average A -> B -> A time past second: ");
+        reportBuilder.append(validate(averageRoundTripPastSecond));
+        reportBuilder.append(TIME_UNIT);
+        reportBuilder.append(DELIMITER);
+
+        reportBuilder.append("max A -> B -> A time: ");
+        reportBuilder.append(validate(maximumRoundTripTotal));
+        reportBuilder.append(TIME_UNIT);
+        reportBuilder.append(DELIMITER);
+
+        reportBuilder.append("average A -> B time: ");
+        reportBuilder.append(validate(averageToCatcherPastSecond));
+        reportBuilder.append(TIME_UNIT);
+        reportBuilder.append(DELIMITER);
+
+        reportBuilder.append("average B -> A time: ");
+        reportBuilder.append(validate(averageBackToPitcherPastSecond));
+        reportBuilder.append(TIME_UNIT);
+
+        return reportBuilder.toString();
+    }
+
+    private String validate(long value) {
+        return value < 0 ? "N/A" : String.valueOf(value);
     }
 }
