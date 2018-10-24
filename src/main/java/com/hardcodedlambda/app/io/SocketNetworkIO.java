@@ -1,5 +1,7 @@
 package com.hardcodedlambda.app.io;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,6 +10,7 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+@Slf4j
 public class SocketNetworkIO implements NetworkIO {
 
     private Socket socket = null;
@@ -19,6 +22,8 @@ public class SocketNetworkIO implements NetworkIO {
     }
 
     private SocketNetworkIO(String host, int port, Type type) {
+
+        System.out.println(host + " " + port);
 
         try {
             if (type == Type.CLIENT) {
@@ -34,8 +39,8 @@ public class SocketNetworkIO implements NetworkIO {
             writer = new PrintWriter(socket.getOutputStream(), true);
 
         } catch (IOException ex) {
-            System.err.println("Application failed to start with cause: ");
-            System.err.println(ex.getLocalizedMessage());
+            log.error("Application failed to start with cause: ");
+            log.error(ex.getLocalizedMessage());
             System.exit(1);
         }
     }

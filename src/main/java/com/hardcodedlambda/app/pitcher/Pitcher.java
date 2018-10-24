@@ -3,6 +3,7 @@ package com.hardcodedlambda.app.pitcher;
 import com.hardcodedlambda.app.common.Measurement;
 import com.hardcodedlambda.app.io.NetworkIO;
 import com.hardcodedlambda.app.io.SocketNetworkIO;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.Clock;
 import java.util.Date;
@@ -12,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static com.hardcodedlambda.app.utils.TimeUtils.truncateToNextSecond;
 
+@Slf4j
 public class Pitcher {
 
     private static final int MILLISECONDS_IN_A_SECOND = 1000;
@@ -45,6 +47,8 @@ public class Pitcher {
     }
 
     public void start() {
+
+        log.info("Pitcher started emitting...");
 
         Date firstRun = truncateToNextSecond(clock);
 

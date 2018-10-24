@@ -2,6 +2,7 @@ package com.hardcodedlambda.app.pitcher;
 
 import com.hardcodedlambda.app.common.Measurement;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.Clock;
 import java.util.*;
@@ -10,6 +11,7 @@ import static com.hardcodedlambda.app.utils.TimeUtils.isDateInPastSecond;
 import static java.util.stream.Collectors.toList;
 
 @AllArgsConstructor
+@Slf4j
 public class Reporter extends TimerTask {
 
     private final Map<Integer, Measurement> measurements;
@@ -19,7 +21,7 @@ public class Reporter extends TimerTask {
     public void run() {
 
         Report report = generateReport(measurements.values(), clock);
-        System.out.println(report);
+        log.info(report.toString());
     }
 
     private static Report generateReport(Collection<Measurement> measurementList, Clock clock) {

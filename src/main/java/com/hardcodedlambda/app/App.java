@@ -17,19 +17,17 @@ public class App {
         if (cmd.hasOption("c")) {
 
             CatcherConfig catcherConfig = CatcherConfig.builder()
-//                    .bind(cmd.getOptionValue("bind"))
-                    .bind("localhost")
+                    .bind(cmd.getOptionValue("bind"))
                     .port(Integer.valueOf(cmd.getOptionValue("port")))
                     .build();
 
-           Catcher.instance(catcherConfig).listen();
+            Catcher.instance(catcherConfig).listen();
 
         } else if (cmd.hasOption("p")) {
 
             PitcherConfig pitcherConfig = PitcherConfig.builder()
-                    .host("localhost")
+                    .host(cmd.getOptionValue("hostname"))
                     .port(Integer.valueOf(cmd.getOptionValue("port")))
-                    // TODO validate mps
                     .messagesPerSecond(Integer.valueOf(cmd.getOptionValue("mps")))
                     .messageSize(Integer.valueOf(cmd.getOptionValue("size")))
                     .build();
@@ -42,13 +40,15 @@ public class App {
 
         final Options options = new Options();
 
-        options.addOption("c", false, "catcher");
-        options.addOption("p", false, "pitcher");
-        options.addOption("mps", true, "messages per second");
-        options.addOption("port", true, "port");
+        options.addOption("p", false, "pitcher mode");
+        options.addOption("c", false, "catcher mode");
 
-        // TODO validate
+        options.addOption("port", true, "port");
+        options.addOption("bind", true, "socket bind ip");
+
+        options.addOption("mps", true, "messages per second");
         options.addOption("size", true, "size of sent message");
+        options.addOption("hostname", true, "hostname");
 
         final CommandLineParser cliParser = new DefaultParser();
         return cliParser.parse(options, args);

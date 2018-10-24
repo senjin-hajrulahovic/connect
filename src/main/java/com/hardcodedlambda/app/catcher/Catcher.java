@@ -3,10 +3,12 @@ package com.hardcodedlambda.app.catcher;
 import com.hardcodedlambda.app.common.RequestPackage;
 import com.hardcodedlambda.app.io.NetworkIO;
 import com.hardcodedlambda.app.io.SocketNetworkIO;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.Clock;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+@Slf4j
 public class Catcher {
 
     private static final ConcurrentLinkedQueue<RequestPackage> receivedPackages = new ConcurrentLinkedQueue<>();
@@ -26,12 +28,18 @@ public class Catcher {
 
         PackageResponder packageResponder = new PackageResponder(networkIO, receivedPackages, Clock.systemDefaultZone());
 
-        new Thread(packageResponder).start();
+        Thread packageResponderThread = new Thread(packageResponder);
+        packageResponderThread.setDaemon(true);
+        packageResponderThread.start();
+
+        log.info("Catcher is listening...");
 
         String line;
         while ((line = networkIO.readLine()) != null) {
             RequestPackage requestPackage = RequestPackage.fromString(line);
             receivedPackages.add(requestPackage);
         }
+
+        log.info("Catcher stopped listening.");
     }
 }

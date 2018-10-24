@@ -32,30 +32,30 @@ public class Report {
         reportBuilder.append(LocalDateTime.now(clock).format(dateTimeFormatter));
         reportBuilder.append(DELIMITER);
 
-        reportBuilder.append("sent packages total: ");
+        reportBuilder.append("sent total: ");
         reportBuilder.append(validate(sentTotal));
         reportBuilder.append(DELIMITER);
 
-        reportBuilder.append("sent packages past second: ");
+        reportBuilder.append("sent past sec: ");
         reportBuilder.append(validate(sentPastSecond));
         reportBuilder.append(DELIMITER);
 
-        reportBuilder.append("average A -> B -> A time past second: ");
+        reportBuilder.append("avg A->B->A past sec: ");
         reportBuilder.append(validate(averageRoundTripPastSecond));
         reportBuilder.append(TIME_UNIT);
         reportBuilder.append(DELIMITER);
 
-        reportBuilder.append("max A -> B -> A time: ");
+        reportBuilder.append("max A->B->A total: ");
         reportBuilder.append(validate(maximumRoundTripTotal));
         reportBuilder.append(TIME_UNIT);
         reportBuilder.append(DELIMITER);
 
-        reportBuilder.append("average A -> B time: ");
+        reportBuilder.append("avg A->B past sec: ");
         reportBuilder.append(validate(averageToCatcherPastSecond));
         reportBuilder.append(TIME_UNIT);
         reportBuilder.append(DELIMITER);
 
-        reportBuilder.append("average B -> A time: ");
+        reportBuilder.append("avg B->A past sec: ");
         reportBuilder.append(validate(averageBackToPitcherPastSecond));
         reportBuilder.append(TIME_UNIT);
 
