@@ -17,7 +17,7 @@ and following for pitcher<br>
 `-c` to run in catcher mode<br>
 `-p` to run in pitcher mode<br>
 `-bind` to define bind address for catcher<br>
-`-hostname` to define catcher hostname
-`-port` to define port for pitcher/chatcher
-`-mps` for number of sent messages per second
-`-size` for the size of every individual message
+`-hostname` to define catcher hostname<br>
+`-port` to define port for pitcher/chatcher<br>
+`-mps` for number of sent messages per second<br>
+`-size` for the size of every individual message<br>
