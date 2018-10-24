@@ -5,11 +5,19 @@ This is a simple tool for network performance measurement
 
 ## Usage
 
-run `mvn package`
-then `java -jar target/connect.me-1.0-SNAPSHOT-jar-with-dependencies.jar`
+run<br> `mvn package`<br>
+then run<br>
+`java -jar target/connect.me-1.0-SNAPSHOT-jar-with-dependencies.jar`<br>
+with following arguments for catcher<br>
+`-c -bind localhost -port 9092`<br>
+and following for pitcher<br>
+`-p -hostname localhost -port 9092 -mps 10 -size 100`
 
-with the flag:
-`-c` to run in catcher mode or
-`-p` to run in pitcher mode
-
-
+## Arguments<br>
+`-c` to run in catcher mode<br>
+`-p` to run in pitcher mode<br>
+`-bind` to define bind address for catcher<br>
+`-hostname` to define catcher hostname
+`-port` to define port for pitcher/chatcher
+`-mps` for number of sent messages per second
+`-size` for the size of every individual message
