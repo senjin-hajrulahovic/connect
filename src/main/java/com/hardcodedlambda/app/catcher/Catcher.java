@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @Slf4j
 public class Catcher {
 
-    private static final ConcurrentLinkedQueue<RequestPackage> receivedPackages = new ConcurrentLinkedQueue<>();
+    static final ConcurrentLinkedQueue<RequestPackage> receivedPackages = new ConcurrentLinkedQueue<>();
     private final NetworkIO networkIO;
 
     public static Catcher instance(CatcherConfig config) {

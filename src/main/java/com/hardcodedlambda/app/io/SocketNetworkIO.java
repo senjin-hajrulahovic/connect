@@ -23,8 +23,6 @@ public class SocketNetworkIO implements NetworkIO {
 
     private SocketNetworkIO(String host, int port, Type type) {
 
-        System.out.println(host + " " + port);
-
         try {
             if (type == Type.CLIENT) {
                 socket = new Socket(host, port);

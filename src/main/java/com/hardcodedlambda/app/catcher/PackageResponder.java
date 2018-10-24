@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @AllArgsConstructor
@@ -20,18 +22,27 @@ public class PackageResponder implements Runnable {
     @Override
     public void run() {
 
+        stopAfter(1000);
+
         while (keepRunning) {
             if (!receivedPackages.isEmpty()) {
 
                 RequestPackage receivedPackage = receivedPackages.poll();
-                RequestPackage requestPackage = receivedPackage.copyWithUpdatedTime(LocalDateTime.now(clock));
 
+                RequestPackage requestPackage = receivedPackage.copyWithUpdatedTime(LocalDateTime.now(clock));
                 networkIO.writeLine(requestPackage.toString());
             }
         }
     }
 
-    public void stop() {
-        this.keepRunning = false;
+    // TODO Refactor to not require such mechanism
+    void stopAfter(long milis) {
+        new Timer().schedule(new TimerTask(){
+
+            @Override
+            public void run() {
+                keepRunning = false;
+            }
+        }, milis);
     }
 }

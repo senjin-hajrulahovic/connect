@@ -17,7 +17,7 @@ import static com.hardcodedlambda.app.utils.TimeUtils.truncateToNextSecond;
 public class Pitcher {
 
     private static final int MILLISECONDS_IN_A_SECOND = 1000;
-    private static final Map<Integer, Measurement> measurements = new ConcurrentHashMap<>();
+    static final Map<Integer, Measurement> measurements = new ConcurrentHashMap<>();
 
     private NetworkIO networkIO;
     private Clock clock;
