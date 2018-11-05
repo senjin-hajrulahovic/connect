@@ -1,4 +1,4 @@
-# Connect.me
+# Connect.measure
 
 ## About
 This is a simple tool for network performance measurement
